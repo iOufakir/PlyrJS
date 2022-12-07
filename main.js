@@ -40,8 +40,8 @@ function init() {
             }, 1e3));
         }),
         o.on("ready", (e) => {
-          o.muted = t.muted;
-
+          o.muted = true;
+          o.play();
           setTimeout(() => {
             for (
               var e = document.querySelectorAll(
