@@ -199,7 +199,7 @@ function init() {
         settings.progressBarColor = progressBarColor.value;
         settings.controlBarColor = controlBarColor.value;
         const dynamicScript = `<div class="plyr__video-embed" id="player"></div>
-        \n<script id="player-script" src="https://app.vidflows.com/player/main.js?s=${window.btoa(
+        \n<script id="player-script" src="https://ioufakir.github.io/PlyrJS/main.js?s=${window.btoa(
           JSON.stringify(settings)
         )}"></script>\n
         <script>
