@@ -11,28 +11,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Document</title>
-
-    <style>
-        button.plyr__control.plyr__control--overlaid.plyr__control--pressed {
-            padding: 3rem;
-            visibility: visible;
-        }
-    </style>
-
 </head>
 
 <body>
 
-    <div class="plyr__video-embed" id="player" playsinline autoplay muted loop style="width:600px"></div>
+    <div class="plyr__video-embed" id="player" playsinline autoplay muted loop></div>
 
-    <script id="player-script"
-        src="https://ioufakir.github.io/PlyrJS/main.js?s=eyJsaW5rIjoiaHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1iVHFWcWs3RlNtWSZ0PTFzIiwiYXV0b3BsYXkiOnRydWUsIm11dGVkIjp0cnVlLCJyYXRpbyI6IjE2OjkiLCJtdXRlZEltYWdlVXJsIjoiIiwicHJvZ3Jlc3NCYXJDb2xvciI6IiNmZmZmZmYiLCJjb250cm9sQmFyQ29sb3IiOiIjMDBiM2ZmIiwicGxheUljb24iOiJodHRwczovL2FwcC52aWRmbG93cy5jb20vcGxheWVyL2ltYWdlcy9iaWctcGxheS1idXR0b24ucG5nIn0=">
-    </script>
-
+    <script id="player-script" src="https://ioufakir.github.io/PlyrJS/main.js?s=eyJsaW5rIjoiaHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1iVHFWcWs3RlNtWSZ0PTFzIiwiYXV0b3BsYXkiOnRydWUsIm11dGVkIjp0cnVlLCJyYXRpbyI6IjE2OjkiLCJtdXRlZEltYWdlVXJsIjoiIiwicHJvZ3Jlc3NCYXJDb2xvciI6IiNmZmZmZmYiLCJjb250cm9sQmFyQ29sb3IiOiIjMDBiM2ZmIiwicGxheUljb24iOiJodHRwczovL2FwcC52aWRmbG93cy5jb20vcGxheWVyL2ltYWdlcy9iaWctcGxheS1idXR0b24ucG5nIn0="></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            Player.run();
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+    Player.run();
+    });
     </script>
 
 

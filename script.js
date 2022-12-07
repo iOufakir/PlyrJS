@@ -198,8 +198,8 @@ function init() {
         settings.mutedImageUrl = mutedImageUrl;
         settings.progressBarColor = progressBarColor.value;
         settings.controlBarColor = controlBarColor.value;
-        const dynamicScript = `<div class="plyr__video-embed" id="player"></div>
-        \n<script id="player-script" src="https://ioufakir.github.io/PlyrJS/main.js?s=${window.btoa(
+        const dynamicScript = `<div class="plyr__video-embed" id="player" playsinline autoplay muted loop></div>
+        \n<script id="player-script" src="https://app.vidflows.com/player/main.min.js?s=${window.btoa(
           JSON.stringify(settings)
         )}"></script>\n
         <script>

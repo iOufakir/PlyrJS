@@ -42,6 +42,14 @@ function init() {
         o.on("ready", (e) => {
           o.muted = true;
           o.play();
+
+          const actionBtn = document.querySelector(
+            "button.plyr__control.plyr__control--overlaid.plyr__control--pressed"
+          );
+          if (actionBtn) {
+            actionBtn.style.visibility = "visible";
+          }
+
           setTimeout(() => {
             for (
               var e = document.querySelectorAll(
@@ -100,7 +108,6 @@ function init() {
 const Player = {
   run: () => {
     (async () => {
-      console.log("load_scripts");
       await load_scripts([
         "https://cdn.plyr.io/3.7.3/plyr.js",
         "https://code.jquery.com/jquery-3.6.0.js",
@@ -141,3 +148,17 @@ async function load_scripts(e) {
 }
 
 load_scripts.loaded = new Set();
+
+
+var styles = `
+.unmute-button {
+padding: 10px;
+margin-left: 10px;
+animation: pulse 2s infinite;
+animation-timing-function: ease-out;
+}
+`
+
+var styleSheet = document.createElement("style")
+styleSheet.innerText = styles
+document.head.appendChild(styleSheet);
