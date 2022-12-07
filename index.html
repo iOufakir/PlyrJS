@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+    <div class="container d-grid">
+        <div class="sidebar">
+            <div class="input">
+			<img src="http://marketingskripte.com/wp-content/uploads/2022/03/Logo-For-Dark-Background-With-Text.png" alt="HTML5 Icon" width="228" height="52">
+                <ul>
+                    <li>
+                        <input type="text" name="" id="videoLink" value="" placeholder="YouTube Video Link">
+                    </li>
+                    <li>
+                        <div class="toggle-action">
+                            <h4>Autoplay OFF/ON</h4>
+                            <div class="toggle">
+                                <input class="tgl tgl-light" id="autoplay" type="checkbox" value="1" />
+                                <label class="tgl-btn" for="autoplay"></label>
+                            </div>
+                        </div>
+                    </li>
+                    <li style="display: none;">
+                        <div class="toggle-action">
+                            <h4>Muted Autoplay</h4>
+                            <div class="toggle">
+                                <input class="tgl tgl-light" id="muted" type="checkbox" value="1" />
+                                <label class="tgl-btn" for="muted"></label>
+                            </div>
+                        </div>
+                    </li>
+                    <li style="display: none;">
+                        <div class="inputs">
+                            <h4>Muted Icon/Image URL</h4>
+                            <div class="color-picker">
+                                <input type="text" id="muted-image" value="">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="inputs">
+                            <h4>Thumbnail URL</h4>
+                            <div class="color-picker">
+                                <input type="text" id="thumbnail-url" value="">
+                            </div>
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="toggle-action">
+                            <h4>Hide Control Bar</h4>
+                            <div class="toggle">
+                                <input class="tgl tgl-light" id="control-bar" type="checkbox" value="1" />
+                                <label class="tgl-btn" for="control-bar"></label>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="inputs">
+                            <h4>Control bar</h4>
+                            <div class="color-picker">
+                                <input type="color" id="control-bar-color" value="#00b3ff">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="inputs">
+                            <h4>Progress bar</h4>
+                            <div class="color-picker">
+                                <input type="color" id="progress-bar-color" value="#ffffff">
+                            </div>
+
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="inputs">
+                            <h4>Aspect Ratio</h4>
+                            <div class="inputs" style="justify-content: flex-end;">
+                                <input type="number" id="width" style="width: 20%;" value="16"> &nbsp;&nbsp; :
+                                &nbsp;&nbsp;<input style="width: 20%;" type="number" id="height" value="9">
+                            </div>
+
+                        </div>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/big-play-button.png">
+                            <img src="https://app.vidflows.com/player/images/big-play-button.png">
+                        </label>
+                        <label>
+                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon.gif">
+                            <img src="https://app.vidflows.com/player/images/play_icon.gif">
+                        </label>
+                        <label>
+                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon2.gif">
+                            <img src="https://app.vidflows.com/player/images/play_icon2.gif">
+                        </label>
+                        <label>
+                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon3.gif">
+                            <img src="https://app.vidflows.com/player/images/play_icon3.gif">
+                        </label>
+                        <label>
+                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon4.gif">
+                            <img src="https://app.vidflows.com/player/images/play_icon4.gif">
+                        </label>
+                        <label>
+                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon5.gif">
+                            <img src="https://app.vidflows.com/player/images/play_icon5.gif">
+                        </label>
+						
+                    </li>
+                </ul>
+                <button id="submit" class="createNewIframe"> Create </button>
+            </div>
+        </div>
+        <div class="main">
+            <div class="w" id="w">
+                <div class="plyr__video-embed" id="player">
+
+
+                </div>
+            </div>
+            <div id="codeSnippet"></div>
+        </div>
+    </div>
+    <div id="loader" style="display:none;">
+        <div class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <script>
+        const script = document.createElement('script')
+        script.src = './script.js?v=' + Date.now();
+        document.head.appendChild(script);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(() => {
+                Player.run();
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
