@@ -37,8 +37,10 @@ function init() {
           }, 1e3));
       }),
       o.on("ready", (e) => {
-        o.muted = true;
-        o.play();
+        if(t.autoplay){
+          o.muted = true;
+          o.play();
+        }
 
         const actionBtn = document.querySelector(
           "button.plyr__control.plyr__control--overlaid.plyr__control--pressed"
