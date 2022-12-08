@@ -9,14 +9,17 @@ function init() {
           visibility: hidden;
         }
         `;
-
       var style = document.createElement("style");
-
       style.appendChild(document.createTextNode(css));
-
       document.head.appendChild(style);
 
       const t = JSON.parse(window.atob(e.split("=")[1]));
+      if (t.playIcon) {
+        const styles = `<style>.video-sound-overlay {\n            width: 100%;\n            height: 100%;\n            background-image: url('${t.playIcon}');\n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
+
+        document.head.insertAdjacentHTML("beforeend", styles);
+      }
+
       let html = `<iframe src="${
         t.link
       }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&autoplay=${
@@ -33,7 +36,7 @@ function init() {
             document.querySelectorAll("[data-plyr]").forEach((e) => {
               "mute" == e.getAttribute("data-plyr") && e.click();
             }),
-            document.querySelector(".video-sound-overlay").remove(),
+            player.querySelector(".video-sound-overlay").remove(),
             setTimeout(() => {
               t.volume = 1;
 
@@ -76,7 +79,7 @@ function init() {
                 : l.appendChild(document.createTextNode(n)),
               document.head.appendChild(l))
             ) {
-              let e = '<div class="video-sound-overlay">';
+              let e = t.playIcon ? '<div class="video-sound-overlay">' : "";
 
               (e += '<div class="unmute-button">'),
                 void 0 !== t.mutedImageUrl &&
@@ -84,15 +87,9 @@ function init() {
                   (e += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
                 (e += "</div>"),
                 (e += "</div>"),
-                document
+                player
                   .querySelector(".plyr__video-embed")
                   .insertAdjacentHTML("beforeend", e);
-
-              if (t.playIcon) {
-                const styles = `<style>.video-sound-overlay {\n            width: 100%;\n            height: 100%;\n            background-image: url('${t.playIcon}');\n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
-
-                document.head.insertAdjacentHTML("beforeend", styles);
-              }
             }
 
             player.style.display = "block";
