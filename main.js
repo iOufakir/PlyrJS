@@ -30,14 +30,16 @@ function init() {
     void 0 !== t.poster && (o.poster = t.poster),
       o.once("pause", (e) => {
         void 0 !== t.muted &&
-          t.muted &&
-          (!t.muted,
+          1 == t.muted &&
+          ((t.muted = !1),
+          document.querySelectorAll("[data-plyr]").forEach((e) => {
+            "mute" == e.getAttribute("data-plyr") && e.click();
+          }),
           document.querySelector(".video-sound-overlay").remove(),
           setTimeout(() => {
             t.volume = 1;
+
             o.play(), o.restart();
-            o.volume = 1;
-            o.muted = false;
           }, 1e3));
       }),
       o.on("ready", (e) => {
