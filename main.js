@@ -20,7 +20,7 @@ function init() {
     const t = JSON.parse(window.atob(e.split("=")[1]));
     let html = `<iframe src="${
       t.link
-    }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&mute=1&autoplay=${
+    }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&autoplay=${
       t.autoplay ? 1 : 0
     }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
     player.insertAdjacentHTML("afterbegin", html);
@@ -83,8 +83,7 @@ function init() {
             (l.styleSheet
               ? (l.styleSheet.cssText = n)
               : l.appendChild(document.createTextNode(n)),
-            document.head.appendChild(l),
-            t.muted)
+            document.head.appendChild(l))
           ) {
             let e = '<div class="video-sound-overlay">';
 
@@ -98,9 +97,9 @@ function init() {
                 .querySelector(".plyr__video-embed")
                 .insertAdjacentHTML("beforeend", e);
 
-            const o = `<style>.video-sound-overlay {\n            width: 100%;\n            height: 100%;\n            background-image: url('${t.playIcon}');\n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
+            const styles = `<style>.video-sound-overlay {\n            width: 100%;\n            height: 100%;\n            background-image: url('${t.playIcon}');\n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
 
-            document.head.insertAdjacentHTML("beforeend", o);
+            document.head.insertAdjacentHTML("beforeend", styles);
           }
 
           player.style.display = "block";
