@@ -6,7 +6,7 @@ function init() {
     if (e && player) {
       var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
         button.plyr__control.plyr__control--overlaid.plyr__control--pressed{
-          visibility: hidden;
+          visibility: visible;
         }
         `;
       var style = document.createElement("style");
@@ -33,7 +33,8 @@ function init() {
           void 0 !== t.muted &&
             1 == t.muted &&
             ((t.muted = !1),
-            document.querySelectorAll("[data-plyr]").forEach((e) => {
+            console.log("hello pause "),
+            player.querySelectorAll("[data-plyr]").forEach((e) => {
               "mute" == e.getAttribute("data-plyr") && e.click();
             }),
             player.querySelector(".video-sound-overlay").remove(),
@@ -44,6 +45,7 @@ function init() {
             }, 1e3));
         }),
         o.on("ready", (e) => {
+          console.log("ready test");
           if (t.autoplay) {
             o.muted = true;
             o.play();
@@ -51,16 +53,16 @@ function init() {
 
           setTimeout(() => {
             for (
-              var e = document.querySelectorAll(
+              var e = player.querySelectorAll(
                   ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
                 ),
-                o = 0;
-              o < e.length;
-              o++
+                i = 0;
+              i < e.length;
+              i++
             )
-              e[o].style.color = t.progressBarColor;
+              e[i].style.color = t.progressBarColor;
 
-            const r = document.querySelectorAll(
+            const r = player.querySelectorAll(
               ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
             );
 
