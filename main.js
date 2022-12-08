@@ -18,7 +18,11 @@ function init() {
     document.head.appendChild(style);
 
     const t = JSON.parse(window.atob(e.split("=")[1]));
-    let html = `<iframe src="${t.link}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&mute=1&autoplay=1" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
+    let html = `<iframe src="${
+      t.link
+    }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1&mute=1&autoplay=${
+      t.autoplay ? 1 : 0
+    }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
     player.insertAdjacentHTML("afterbegin", html);
 
     const o = Plyr.setup(".plyr__video-embed", t)[0];
@@ -37,7 +41,7 @@ function init() {
           }, 1e3));
       }),
       o.on("ready", (e) => {
-        if(t.autoplay){
+        if (t.autoplay) {
           o.muted = true;
           o.play();
         }
