@@ -132,7 +132,7 @@ function init() {
     frame.innerHTML = html;
     settings.autoplay = autoplay.checked;
     if (controlBar.checked) {
-      settings.controls = ['play'];
+      settings.controls = ["play"];
     } else {
       delete settings.controls;
     }
@@ -198,10 +198,11 @@ function init() {
         settings.mutedImageUrl = mutedImageUrl;
         settings.progressBarColor = progressBarColor.value;
         settings.controlBarColor = controlBarColor.value;
-        const dynamicScript = `<div class="plyr__video-embed" id="player" playsinline autoplay muted loop></div>
-        \n<script id="player-script" src="https://app.vidflows.com/player/main.min.js?s=${window.btoa(
+        const dynamicScript = `<div class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
           JSON.stringify(settings)
-        )}"></script>\n
+        )}"></div>
+        \n<!-- ADD THE CODE BELOW ONLY ONCE IN YOUR WEBSITE. (IF YOU HAVE IT ALREADY, THEN DON'T INCLUDE IT!) !-->
+        <script id="player-script" src="https://app.vidflows.com/player/main.min.js"></script>\n
         <script>
         document.addEventListener('DOMContentLoaded', function () {
             Player.run();

@@ -15,14 +15,23 @@
 
 <body>
 
-    <div class="plyr__video-embed" id="player" playsinline autoplay muted loop></div>
+    <div style="width: 500px;" class="plyr__video-embed" playsinline autoplay muted loop
+        video-details="s=eyJsaW5rIjoiaHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1VQ2xFNC1Qa09YSSIsImF1dG9wbGF5IjpmYWxzZSwibXV0ZWQiOmZhbHNlLCJyYXRpbyI6IjE2OjkiLCJtdXRlZEltYWdlVXJsIjoiIiwicHJvZ3Jlc3NCYXJDb2xvciI6IiNmZmZmZmYiLCJjb250cm9sQmFyQ29sb3IiOiIjMDBiM2ZmIiwiY29udHJvbHMiOlsicGxheSJdfQ==">
+    </div>
+    <div style="width: 600px;" class="plyr__video-embed" playsinline autoplay muted loop
+        video-details="s=eyJsaW5rIjoiaHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1zdFlTS0NwdUdnVSIsImF1dG9wbGF5IjpmYWxzZSwibXV0ZWQiOmZhbHNlLCJyYXRpbyI6IjE2OjkiLCJtdXRlZEltYWdlVXJsIjoiIiwicHJvZ3Jlc3NCYXJDb2xvciI6IiNmZmZmZmYiLCJjb250cm9sQmFyQ29sb3IiOiIjMDBiM2ZmIn0=">
+    </div>
 
-    <script id="player-script" src="main.js?s=eyJsaW5rIjoiaHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvY0k0cnlhdFZrS3ciLCJhdXRvcGxheSI6ZmFsc2UsIm11dGVkIjpmYWxzZSwicmF0aW8iOiIxNjo5IiwibXV0ZWRJbWFnZVVybCI6IiIsInByb2dyZXNzQmFyQ29sb3IiOiIjZmZmZmZmIiwiY29udHJvbEJhckNvbG9yIjoiIzAwYjNmZiJ9"></script>
-    
+    <div style="width: 400px;" class="plyr__video-embed" playsinline autoplay muted loop
+        video-details="s=eyJsaW5rIjoiaHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1ZcEdqYUoxZXR0SSIsImF1dG9wbGF5Ijp0cnVlLCJtdXRlZCI6ZmFsc2UsInJhdGlvIjoiMTY6OSIsIm11dGVkSW1hZ2VVcmwiOiIiLCJwcm9ncmVzc0JhckNvbG9yIjoiI2ZmZmZmZiIsImNvbnRyb2xCYXJDb2xvciI6IiMwMGIzZmYifQ==">
+    </div>
+
+    <script id="player-script" src="main.js"></script>
+
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    Player.run();
-    });
+        document.addEventListener('DOMContentLoaded', function () {
+            Player.run();
+        });
     </script>
 
 
