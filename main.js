@@ -80,8 +80,7 @@ function init() {
           ) {
             let e = '<div class="video-sound-overlay">';
 
-            (e +=
-              '<div class="unmute-button" styles="padding: 10px;margin-left: 10px;animation: pulse 2s infinite;animation-timing-function: ease-out;">'),
+            (e += '<div class="unmute-button">'),
               void 0 !== t.mutedImageUrl &&
                 t.mutedImageUrl &&
                 (e += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
@@ -145,3 +144,35 @@ async function load_scripts(e) {
 }
 
 load_scripts.loaded = new Set();
+
+var styles = `
+.unmute-button {
+    padding: 15px;
+    margin-left: 15px;
+    animation: pulse 2s infinite;
+    animation-timing-function: ease-out;
+    transition-timing-function: ease-in-out;
+    animation-name: pulse;
+    width: 50%;
+    position: absolute;
+    }
+    
+    
+    
+    @keyframes pulse {
+    0% {
+    transform: scale(1);
+    }
+    50% {
+    transform: scale(1.05);
+    }
+    100% {
+    transform: scale(1);
+    }
+    }
+    
+`;
+
+var styleSheet = document.createElement("style");
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
