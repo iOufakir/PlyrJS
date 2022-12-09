@@ -64,11 +64,11 @@ function init() {
         t.autoplay ? 1 : 0
       }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
       player.insertAdjacentHTML("afterbegin", html);
-
-      if (t.autoplay && t.muted) {
+  
+      const o = new Plyr(player, t);
+      if (o.isVimeo && t.autoplay === true && t.muted === true) {
         t.volume = 0;
       }
-      const o = new Plyr(player, t);
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
           const videoSoundOverlay = player.querySelector(
