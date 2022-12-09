@@ -111,7 +111,13 @@ function init() {
         }),
         o.on("ready", (e) => {
           if (!o.isVimeo && t.autoplay) {
-            o.play();
+            try {
+              o.play();
+            } catch (error) {
+              console.error(error);
+              console.error("ilyas");
+            }
+            
           }
 
           setTimeout(() => {
