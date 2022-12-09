@@ -15,6 +15,17 @@ function init() {
   const thumbnail = document.getElementById("thumbnail-url");
   const mutedImage = document.getElementById("muted-image");
   const icon = document.querySelectorAll(".playIcon");
+  const ctaCheckbox = document.querySelector("#cta");
+  const ctaInputTitle = document.querySelector("#cta-input-title");
+  const ctaInputUrl = document.querySelector("#cta-input-url");
+  const ctaTimeTarget = document.querySelector("#cta-time-target");
+  const ctaHeadline = document.querySelector("#cta-headline");
+  const ctaHeadlineColor = document.querySelector("#cta-headline-color");
+  const ctaBtnBackgroundColor = document.querySelector(
+    "#cta-btn-background-color"
+  );
+  const ctaBtnTextColor = document.querySelector("#cta-btn-text-color");
+
   var css = ".plyr__menu__container .plyr__control>span{color:#000 !important}";
   var style = document.createElement("style");
   style.appendChild(document.createTextNode(css));
@@ -40,6 +51,60 @@ function init() {
       muted.closest("li").style.display = "none";
     }
     createNewIframe();
+  });
+
+  ctaCheckbox.addEventListener("change", (e) => {
+    if (ctaCheckbox.checked) {
+      ctaInputTitle.closest("li").style.display = "block";
+      ctaInputUrl.closest("li").style.display = "block";
+      ctaTimeTarget.closest("li").style.display = "block";
+      ctaHeadline.closest("li").style.display = "block";
+      ctaHeadlineColor.closest("li").style.display = "block";
+      ctaBtnBackgroundColor.closest("li").style.display = "block";
+      ctaBtnTextColor.closest("li").style.display = "block";
+    } else {
+      ctaInputTitle.value = "";
+      ctaInputUrl.value = "";
+      ctaTimeTarget.value = "";
+      ctaHeadline.value = "";
+      ctaInputTitle.closest("li").style.display = "none";
+      ctaInputUrl.closest("li").style.display = "none";
+      ctaTimeTarget.closest("li").style.display = "none";
+      ctaHeadline.closest("li").style.display = "none";
+      ctaHeadlineColor.closest("li").style.display = "none";
+      ctaBtnBackgroundColor.closest("li").style.display = "none";
+      ctaBtnTextColor.closest("li").style.display = "none";
+    }
+    createNewIframe();
+  });
+
+  ctaInputTitle.addEventListener("input", (e) => {
+    createNewIframe();
+  });
+
+  ctaHeadlineColor.addEventListener("change", (e) => {
+    createNewIframe();
+  });
+  ctaBtnBackgroundColor.addEventListener("change", (e) => {
+    createNewIframe();
+  });
+  ctaBtnTextColor.addEventListener("change", (e) => {
+    createNewIframe();
+  });
+
+  ctaHeadline.addEventListener("input", (e) => {
+    createNewIframe();
+  });
+
+  ctaInputUrl.addEventListener("input", (e) => {
+    createNewIframe();
+  });
+
+  ctaTimeTarget.addEventListener("input", (e) => {
+    const ctaModal = document.querySelector(".cta-modal");
+    if (ctaModal) {
+      ctaModal.remove();
+    }
   });
 
   muted.addEventListener("change", (event) => {
@@ -77,6 +142,10 @@ function init() {
     const controlBarColor = document.getElementById("control-bar-color");
     const height = document.getElementById("height");
     const width = document.getElementById("width");
+    const ctaModal = document.querySelector(".cta-modal");
+    if (ctaModal) {
+      ctaModal.remove();
+    }
 
     let link = document.getElementById("videoLink").value;
 
@@ -198,6 +267,15 @@ function init() {
         settings.mutedImageUrl = mutedImageUrl;
         settings.progressBarColor = progressBarColor.value;
         settings.controlBarColor = controlBarColor.value;
+        settings.ctaEnabled = ctaCheckbox.checked;
+        settings.ctaInputUrl = ctaInputUrl.value;
+        settings.ctaInputTitle = ctaInputTitle.value;
+        settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
+        settings.ctaHeadline = ctaHeadline.value;
+        settings.ctaHeadlineColor = ctaHeadlineColor.value;
+        settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
+        settings.ctaBtnTextColor = ctaBtnTextColor.value;
+
         const dynamicScript = `<div class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
           JSON.stringify(settings)
         )}"></div>
@@ -261,6 +339,41 @@ function init() {
         Player.hideLoader();
       }, 1000);
     });
+
+    p.on("timeupdate", (e) => {
+      if (
+        p.playing &&
+        ctaCheckbox.checked &&
+        ctaTimeTarget.value &&
+        p.currentTime >= parseInt(ctaTimeTarget.value).toFixed(2) &&
+        p.currentTime < parseFloat(ctaTimeTarget.value + ".1").toFixed(2)
+      ) {
+        renderCtaModal(
+          frame,
+          ctaHeadline.value,
+          ctaHeadlineColor.value,
+          ctaInputTitle.value,
+          ctaInputUrl.value,
+          ctaBtnBackgroundColor.value,
+          ctaBtnTextColor.value,
+          p
+        );
+        p.pause();
+      }
+    });
+
+    if (ctaCheckbox.checked) {
+      renderCtaModal(
+        frame,
+        ctaHeadline.value,
+        ctaHeadlineColor.value,
+        ctaInputTitle.value,
+        ctaInputUrl.value,
+        ctaBtnBackgroundColor.value,
+        ctaBtnTextColor.value,
+        p
+      );
+    }
   }
 }
 
@@ -289,6 +402,68 @@ const Player = {
     })();
   },
 };
+
+function renderCtaModal(
+  frame,
+  ctaHeadline,
+  headlineColor,
+  ctaInputTitle,
+  ctaInputUrl,
+  btnBackgroundColor,
+  btnTextColor,
+  player
+) {
+  const ctaModal = `<div class="cta-modal" style="background-color: rgba(0, 0, 0, 6);height: 100%;width: 100%;z-index: 10;position: absolute;top: 0;left: 0;display: flex;flex-direction: column;">
+
+  <div style="
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+">
+
+<div style="
+display: flex;
+flex-direction: column;
+align-items: center;
+">
+
+<div style="position: relative;text-align: center;">
+<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${ctaHeadline}</span></p>
+</div></div>
+
+<div style="position: relative;cursor: pointer;width: 20rem;text-align: center;">
+<div style="background: ${btnBackgroundColor}; border-radius: 5px; letter-spacing: 0px;">
+<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="cta-resume" href="${ctaInputUrl}" target="_blank"><span style="font-size: 2rem;text-align: center;display: block;">${ctaInputTitle}</span></a>
+</div>
+
+</div>
+</div>
+  
+ </div>
+
+ <div style="
+ width: 100%;
+ position: relative;
+ bottom: 2rem;
+"><p style="color: #fff;margin-right: 3rem;text-align: right;font-size: 1.4rem; margin-bottom: 0;"><span class="cta-resume" style="padding:0.3rem;cursor:pointer;">Skip</span></p></div>
+ 
+ </div>`;
+
+  frame.querySelector(".plyr").insertAdjacentHTML("beforeend", ctaModal);
+
+  frame.querySelectorAll(".cta-resume").forEach((action) => {
+    action.addEventListener("click", (e) => {
+      resumeVideo(e, player);
+    });
+  });
+}
+
+function resumeVideo(event, player) {
+  event.target.closest(".cta-modal").style.display = "none";
+  player.play();
+}
 
 async function load_scripts(script_urls) {
   function load(script_url) {
