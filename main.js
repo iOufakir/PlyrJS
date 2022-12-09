@@ -115,9 +115,7 @@ function init() {
               o.play();
             } catch (error) {
               console.error(error);
-              console.error("ilyas");
             }
-            
           }
 
           setTimeout(() => {
