@@ -68,13 +68,16 @@ function init() {
       const o = new Plyr(player, t);
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
+          const videoSoundOverlay = player.querySelector(
+            ".video-sound-overlay"
+          );
           void 0 !== t.muted &&
             1 == t.muted &&
             ((t.muted = !1),
             player.querySelectorAll("[data-plyr]").forEach((e) => {
               "mute" == e.getAttribute("data-plyr") && e.click();
             }),
-            player.querySelector(".video-sound-overlay").remove(),
+            videoSoundOverlay ? videoSoundOverlay.remove() : "",
             setTimeout(() => {
               t.volume = 1;
 
@@ -106,8 +109,9 @@ function init() {
         o.on("ready", (e) => {
           if (t.muted) {
             o.muted = true;
+            o.volume = 0;
           }
-          if (t.autoplay && !o.isVimeo) {
+          if (t.autoplay) {
             o.play();
           }
 
