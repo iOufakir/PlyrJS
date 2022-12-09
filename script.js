@@ -340,6 +340,12 @@ function init() {
       }, 1000);
     });
 
+    p.on("play", (event) => {
+      if (controlBar.checked && settings.muted && settings.autoplay) {
+        p.volume = 1;
+      }
+    });
+
     p.on("timeupdate", (e) => {
       if (
         p.playing &&

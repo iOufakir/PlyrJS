@@ -64,7 +64,7 @@ function init() {
         t.autoplay ? 1 : 0
       }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
       player.insertAdjacentHTML("afterbegin", html);
-  
+
       const o = new Plyr(player, t);
       if (o.isVimeo && t.autoplay === true && t.muted === true) {
         t.volume = 0;
