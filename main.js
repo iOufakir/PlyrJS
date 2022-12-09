@@ -107,9 +107,8 @@ function init() {
           }
         }),
         o.on("ready", (e) => {
-          if (t.muted) {
-            o.muted = true;
-            o.volume = 0;
+          if (!t.muted) {
+            o.volume = 1;
           }
           if (t.autoplay) {
             o.play();
