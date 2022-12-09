@@ -60,11 +60,14 @@ function init() {
 
       let html = `<iframe src="${
         t.link
-      }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&autoplay=${
+      }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&background=1&autoplay=${
         t.autoplay ? 1 : 0
       }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
       player.insertAdjacentHTML("afterbegin", html);
 
+      if (t.autoplay && t.muted) {
+        t.volume = 0;
+      }
       const o = new Plyr(player, t);
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
@@ -107,12 +110,8 @@ function init() {
           }
         }),
         o.on("ready", (e) => {
-          if (!t.muted) {
-            o.volume = 1;
-          }
-          if (t.autoplay) {
+          if (!o.isVimeo && t.autoplay) {
             o.play();
-            o.restart();
           }
 
           setTimeout(() => {
