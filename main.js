@@ -112,6 +112,7 @@ function init() {
           }
           if (t.autoplay) {
             o.play();
+            o.restart();
           }
 
           setTimeout(() => {
