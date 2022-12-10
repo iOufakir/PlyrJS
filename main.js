@@ -176,7 +176,7 @@ function init() {
             });
 
             player.style.display = "block";
-          }, 1e3);
+          }, 10);
         });
     } else Plyr.setup(".plyr__video-embed");
   });
