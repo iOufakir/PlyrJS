@@ -82,8 +82,10 @@ function init() {
             setTimeout(() => {
               t.volume = 1;
 
-              o.play(), o.restart();
-            }, 1e3));
+              if (o.autoplay) {
+                o.play(), o.restart();
+              }
+            }, 100));
         }),
         o.on("timeupdate", (e) => {
           if (
@@ -151,7 +153,7 @@ function init() {
                   visibility: visible;
                   z-index:0;
                   background:${t.controlBarColor}" 
-                  type="button" id="play-icon-default" class="plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`
+                  type="button" class="play-icon-default plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`
                 : ""),
               (divBlock += "<div>");
 
@@ -165,8 +167,11 @@ function init() {
             videoSoundOverlay.style.backgroundImage = `url(${t.playIcon})`;
 
             videoSoundOverlay.addEventListener("click", () => {
+              videoSoundOverlay.remove();
               if (o.autoplay && o.muted) {
                 o.volume = 1;
+                o.autoplay = false;
+                o.restart();
               }
             });
 
