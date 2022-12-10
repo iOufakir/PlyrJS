@@ -26,7 +26,23 @@ function init() {
   );
   const ctaBtnTextColor = document.querySelector("#cta-btn-text-color");
 
-  var css = ".plyr__menu__container .plyr__control>span{color:#000 !important}";
+  var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
+  
+  button.plyr__control--overlaid {
+    padding: calc(var(--plyr-control-spacing,15px)*1.5);
+    border-radius: 10%;
+    padding-left: 45px;
+    padding-right: 45px;
+    }
+    
+    button.plyr__control--overlaid svg {
+    left: 2px;
+    position: relative;
+    height: 30px;
+    width: 30px;
+    }
+    `;
+
   var style = document.createElement("style");
   style.appendChild(document.createTextNode(css));
   document.head.appendChild(style);
@@ -122,7 +138,6 @@ function init() {
   });
 
   mutedImage.addEventListener("input", (event) => {
-    // console.log(event.target.value)
     mutedImageUrl = event.target.value;
     createNewIframe();
   });
@@ -137,6 +152,12 @@ function init() {
   });
 
   function createNewIframe() {
+    let link = document.getElementById("videoLink").value;
+
+    if (!link) {
+      return;
+    }
+
     Player.showLoader();
     const progressBarColor = document.getElementById("progress-bar-color");
     const controlBarColor = document.getElementById("control-bar-color");
@@ -146,8 +167,6 @@ function init() {
     if (ctaModal) {
       ctaModal.remove();
     }
-
-    let link = document.getElementById("videoLink").value;
 
     settings.link = link;
 
@@ -176,7 +195,13 @@ function init() {
         );
       }
 
-      var css = `.plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]:before {background: var(--plyr-control-toggle-checked-background,var(--plyr-color-main,var(--plyr-color-main,${controlBarColor.value})))} .plyr--video .plyr__control:hover{ background-color: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main, ${controlBarColor.value}))) !important}`;
+      var css = `.plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]:before {background: var(--plyr-control-toggle-checked-background,var(--plyr-color-main,var(--plyr-color-main,${controlBarColor.value})))} .plyr--video .plyr__control:hover{ background-color: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main, ${controlBarColor.value}))) !important} 
+
+      button.plyr__control--overlaid{
+        background-color:  ${controlBarColor.value}; 
+      }
+      
+           `;
       document.getElementById("hover_color")?.remove();
       var style = document.createElement("style");
       style.id = "hover_color";
@@ -189,29 +214,27 @@ function init() {
       document.head.appendChild(style);
     });
 
-    if (!link) {
-      return;
-    }
-
-    // document.getElementById('videoLink').value = '';
-    let html = `<div class="plyr__video-embed" id="player" playsinline autoplay muted loop>
-     <iframe src="${link}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+    let html = `<div data-plyr-provider="${
+      link.includes("vimeo") ? "vimeo" : "youtube"
+    }" class="plyr__video-embed" id="player" playsinline autoplay muted loop>
+     <iframe src="${link}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&background=1&mute=1&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
      </div>\n`;
 
     frame.innerHTML = html;
     settings.autoplay = autoplay.checked;
-    if (controlBar.checked) {
-      settings.controls = ["play"];
-    } else {
-      delete settings.controls;
-    }
+
     settings.muted = muted.checked;
     if (!autoplay.checked) {
       settings.autoplay = muted.checked;
     }
-
     if (thumbnail.value) {
       settings.poster = thumbnail.value;
+    }
+
+    if (controlBar.checked) {
+      settings.controls = ["play", "play-large"];
+    } else {
+      delete settings.controls;
     }
 
     const w = width.value ? width.value : "16";
@@ -219,7 +242,12 @@ function init() {
 
     settings.ratio = w + ":" + h;
 
-    const p = Plyr.setup("#player", settings)[0];
+    settings.storage = { enabled: false };
+    const p = new Plyr("#player", settings);
+
+    if (p.isVimeo && settings.autoplay && settings.muted) {
+      settings.volume = 0;
+    }
 
     if (thumbnail.value) {
       p.poster = thumbnail.value;
@@ -246,39 +274,40 @@ function init() {
     });
 
     p.on("ready", (event) => {
-      setTimeout(() => {
-        var progressBar = document.querySelectorAll(
-          ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
+      var progressBar = document.querySelectorAll(
+        ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
+      );
+      for (var i = 0; i < progressBar.length; i++) {
+        progressBar[i].style.color = progressBarColor.value;
+      }
+
+      const controls = document.querySelectorAll(
+        ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
+      );
+
+      for (let i = 0; i < controls.length; i++) {
+        controls[i].style.setProperty(
+          "--plyr-range-thumb-background",
+          controlBarColor.value
         );
-        for (var i = 0; i < progressBar.length; i++) {
-          progressBar[i].style.color = progressBarColor.value;
-        }
+      }
+      settings.mutedImageUrl = mutedImageUrl;
+      settings.progressBarColor = progressBarColor.value;
+      settings.controlBarColor = controlBarColor.value;
+      settings.ctaEnabled = ctaCheckbox.checked;
+      settings.ctaInputUrl = ctaInputUrl.value;
+      settings.ctaInputTitle = ctaInputTitle.value;
+      settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
+      settings.ctaHeadline = ctaHeadline.value;
+      settings.ctaHeadlineColor = ctaHeadlineColor.value;
+      settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
+      settings.ctaBtnTextColor = ctaBtnTextColor.value;
 
-        const controls = document.querySelectorAll(
-          ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
-        );
-
-        for (let i = 0; i < controls.length; i++) {
-          controls[i].style.setProperty(
-            "--plyr-range-thumb-background",
-            controlBarColor.value
-          );
-        }
-        settings.mutedImageUrl = mutedImageUrl;
-        settings.progressBarColor = progressBarColor.value;
-        settings.controlBarColor = controlBarColor.value;
-        settings.ctaEnabled = ctaCheckbox.checked;
-        settings.ctaInputUrl = ctaInputUrl.value;
-        settings.ctaInputTitle = ctaInputTitle.value;
-        settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
-        settings.ctaHeadline = ctaHeadline.value;
-        settings.ctaHeadlineColor = ctaHeadlineColor.value;
-        settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
-        settings.ctaBtnTextColor = ctaBtnTextColor.value;
-
-        const dynamicScript = `<div class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
-          JSON.stringify(settings)
-        )}"></div>
+      const dynamicScript = `<div data-plyr-provider="${
+        link.includes("vimeo") ? "vimeo" : "youtube"
+      }" class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
+        JSON.stringify(settings)
+      )}"></div>
         \n<!-- ADD THE CODE BELOW ONLY ONCE IN YOUR WEBSITE. (IF YOU HAVE IT ALREADY, THEN DON'T INCLUDE IT!) !-->
         <script id="player-script" src="https://app.vidflows.com/player/main.min.js"></script>\n
         <script>
@@ -286,23 +315,23 @@ function init() {
             Player.run();
         });
         </script>`;
-        if (displayCode) {
-          const codeSnippet = document.createElement("pre");
-          document.getElementById("codeSnippet").appendChild(codeSnippet);
-          document.querySelector("pre").innerHTML =
-            dynamicScript.toHtmlEntities();
+      if (displayCode) {
+        const codeSnippet = document.createElement("pre");
+        document.getElementById("codeSnippet").appendChild(codeSnippet);
+        document.querySelector("pre").innerHTML =
+          dynamicScript.toHtmlEntities();
+      }
+      if (settings.muted) {
+        let overlay = `<div class="video-sound-overlay">`;
+        overlay += `<div class="unmute-button">`;
+        if (mutedImageUrl) {
+          overlay += `<img src="${mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`;
         }
-        if (settings.muted) {
-          let overlay = `<div class="video-sound-overlay">`;
-          overlay += `<div class="unmute-button">`;
-          if (mutedImageUrl) {
-            overlay += `<img src="${mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`;
-          }
-          overlay += `</div>`;
-          overlay += `</div>`;
-          frame.firstChild.insertAdjacentHTML("beforeend", overlay);
+        overlay += `</div>`;
+        overlay += `</div>`;
+        frame.firstChild.insertAdjacentHTML("beforeend", overlay);
 
-          const style = `<style>.video-sound-overlay {
+        const style = `<style>.video-sound-overlay {
             width: 100%;
             height: 100%;
             background-image: url('${settings.playIcon}');
@@ -334,16 +363,27 @@ function init() {
             pointer-events: none;
         }
         </style>`;
-          document.head.insertAdjacentHTML("beforeend", style);
-        }
-        Player.hideLoader();
-      }, 1000);
-    });
+        document.head.insertAdjacentHTML("beforeend", style);
 
-    p.on("play", (event) => {
-      if (controlBar.checked && settings.muted && settings.autoplay) {
-        p.volume = 1;
+        const videoSoundOverlay = player.querySelector(".video-sound-overlay");
+        videoSoundOverlay.addEventListener("click", () => {
+          document.querySelector("#play-icon-default").style.display = "none";
+          if (p.autoplay && p.muted) {
+            p.volume = 1;
+          }
+        });
+
+        if (!settings.play) {
+          const playBlock = `<button style="
+          opacity: 1;
+          visibility: visible;
+          z-index:0;" 
+          type="button" id="play-icon-default" class="plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`;
+          videoSoundOverlay.insertAdjacentHTML("beforeend", playBlock);
+        }
       }
+
+      Player.hideLoader();
     });
 
     p.on("timeupdate", (e) => {

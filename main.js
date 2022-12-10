@@ -46,16 +46,16 @@ function init() {
     var e = player.getAttribute("video-details");
     if (e && player) {
       var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
-        button.plyr__control.plyr__control--overlaid.plyr__control--pressed{
-          visibility: visible;
-        }
+       
         `;
       var style = document.createElement("style");
       style.appendChild(document.createTextNode(css));
       document.head.appendChild(style);
 
       const t = JSON.parse(window.atob(e.split("=")[1]));
-      const styles = `<style>.video-sound-overlay {\n            width: 100%;\n            height: 100%;\n            background-image: url('${t.playIcon}');\n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
+
+      const styles = `<style>.video-sound-overlay {\n            width: 100%; z-index:4; \n            height: 100%;\n            \n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        
+      .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
       document.head.insertAdjacentHTML("beforeend", styles);
 
       let html = `<iframe src="${
@@ -66,9 +66,7 @@ function init() {
       player.insertAdjacentHTML("afterbegin", html);
 
       const o = new Plyr(player, t);
-      if (o.isVimeo && t.autoplay === true && t.muted === true) {
-        t.volume = 0;
-      }
+
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
           const videoSoundOverlay = player.querySelector(
@@ -126,8 +124,10 @@ function init() {
                 i = 0;
               i < e.length;
               i++
-            )
+            ) {
               e[i].style.color = t.progressBarColor;
+              e[i].style.backgroundColor = t.controlBarColor;
+            }
 
             const r = player.querySelectorAll(
               ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
@@ -139,27 +139,36 @@ function init() {
                 t.controlBarColor
               );
 
-            var n = `.plyr--video .plyr__control:hover{ background-color: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main, ${t.controlBarColor}))) !important}`,
-              l = document.createElement("style");
+            let divBlock = '<div class="video-sound-overlay">';
+            (divBlock += '<div class="unmute-button">'),
+              void 0 !== t.mutedImageUrl &&
+                t.mutedImageUrl &&
+                (divBlock += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
+              (divBlock += "</div>"),
+              (divBlock += !t.playIcon
+                ? `<button style="
+                  opacity: 1;
+                  visibility: visible;
+                  z-index:0;
+                  background:${t.controlBarColor}" 
+                  type="button" id="play-icon-default" class="plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`
+                : ""),
+              (divBlock += "<div>");
 
-            if (
-              (l.styleSheet
-                ? (l.styleSheet.cssText = n)
-                : l.appendChild(document.createTextNode(n)),
-              document.head.appendChild(l))
-            ) {
-              let e = t.playIcon ? '<div class="video-sound-overlay">' : "";
+            player
+              .querySelector(".plyr__video-embed")
+              .insertAdjacentHTML("beforeend", divBlock);
 
-              (e += '<div class="unmute-button">'),
-                void 0 !== t.mutedImageUrl &&
-                  t.mutedImageUrl &&
-                  (e += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
-                (e += "</div>"),
-                (e += "</div>"),
-                player
-                  .querySelector(".plyr__video-embed")
-                  .insertAdjacentHTML("beforeend", e);
-            }
+            const videoSoundOverlay = player.querySelector(
+              ".video-sound-overlay"
+            );
+            videoSoundOverlay.style.backgroundImage = `url(${t.playIcon})`;
+
+            videoSoundOverlay.addEventListener("click", () => {
+              if (o.autoplay && o.muted) {
+                o.volume = 1;
+              }
+            });
 
             player.style.display = "block";
           }, 1e3);
@@ -256,6 +265,23 @@ var styles = `
     }
     }
     
+    button.plyr__control--overlaid {
+      padding: calc(var(--plyr-control-spacing,15px)*1.5);
+      border-radius: 10%;
+      padding-left: 45px;
+      padding-right: 45px;
+      }
+      
+      button.plyr__control--overlaid svg {
+      left: 2px;
+      position: relative;
+      height: 30px;
+      width: 30px;
+      }
+
+      button.plyr__control.plyr__control--overlaid.plyr__control--pressed{
+        visibility: visible;
+      }
 `;
 
 var styleSheet = document.createElement("style");
