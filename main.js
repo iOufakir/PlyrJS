@@ -147,7 +147,7 @@ function init() {
                 t.mutedImageUrl &&
                 (divBlock += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
               (divBlock += "</div>"),
-              (divBlock += !t.playIcon
+              (divBlock += !t.playIcon 
                 ? `<button style="
                   opacity: 1;
                   visibility: visible;

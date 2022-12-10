@@ -254,6 +254,7 @@ function init() {
     }
 
     p.once("pause", (event) => {
+      const videoSoundOverlay = player.querySelector(".video-sound-overlay");
       if (typeof settings.muted != "undefined") {
         if (settings.muted == true) {
           settings.muted = false;
@@ -263,12 +264,14 @@ function init() {
               ele.click();
             }
           });
-          document.querySelector(".video-sound-overlay").remove();
-          setTimeout(() => {
-            settings.volume = 1;
-            p.play();
-            p.restart();
-          }, 1000);
+          videoSoundOverlay ? videoSoundOverlay.remove() : "",
+            setTimeout(() => {
+              settings.volume = 1;
+              if (p.autoplay) {
+                p.play();
+                p.restart();
+              }
+            }, 100);
         }
       }
     });
@@ -338,6 +341,7 @@ function init() {
             background-repeat: no-repeat;
             position: absolute;
             left: 0%;
+            z-index:4;
             right: 0%;
             top: 0%;
             bottom: 0%;
@@ -366,13 +370,6 @@ function init() {
         document.head.insertAdjacentHTML("beforeend", style);
 
         const videoSoundOverlay = player.querySelector(".video-sound-overlay");
-        videoSoundOverlay.addEventListener("click", () => {
-          document.querySelector("#play-icon-default").style.display = "none";
-          if (p.autoplay && p.muted) {
-            p.volume = 1;
-          }
-        });
-
         if (!settings.play && !settings.playIcon) {
           const playBlock = `<button style="
           opacity: 1;
@@ -381,6 +378,16 @@ function init() {
           type="button" id="play-icon-default" class="plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`;
           videoSoundOverlay.insertAdjacentHTML("beforeend", playBlock);
         }
+
+        videoSoundOverlay.addEventListener("click", () => {
+          videoSoundOverlay.remove();
+          if (p.autoplay && p.muted) {
+            p.volume = 1;
+            p.autoplay = false;
+            p.play();
+            p.restart();
+          }
+        });
       }
 
       Player.hideLoader();
