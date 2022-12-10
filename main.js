@@ -118,65 +118,63 @@ function init() {
             }
           }
 
-          setTimeout(() => {
-            for (
-              var e = player.querySelectorAll(
-                  ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
-                ),
-                i = 0;
-              i < e.length;
-              i++
-            ) {
-              e[i].style.color = t.progressBarColor;
-              e[i].style.backgroundColor = t.controlBarColor;
-            }
+          for (
+            var e = player.querySelectorAll(
+                ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
+              ),
+              i = 0;
+            i < e.length;
+            i++
+          ) {
+            e[i].style.color = t.progressBarColor;
+            e[i].style.backgroundColor = t.controlBarColor;
+          }
 
-            const r = player.querySelectorAll(
-              ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
+          const r = player.querySelectorAll(
+            ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
+          );
+
+          for (let e = 0; e < r.length; e++)
+            r[e].style.setProperty(
+              "--plyr-range-thumb-background",
+              t.controlBarColor
             );
 
-            for (let e = 0; e < r.length; e++)
-              r[e].style.setProperty(
-                "--plyr-range-thumb-background",
-                t.controlBarColor
-              );
-
-            let divBlock = '<div class="video-sound-overlay">';
-            (divBlock += '<div class="unmute-button">'),
-              void 0 !== t.mutedImageUrl &&
-                t.mutedImageUrl &&
-                (divBlock += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
-              (divBlock += "</div>"),
-              (divBlock += !t.playIcon 
-                ? `<button style="
+          let divBlock = '<div class="video-sound-overlay">';
+          (divBlock += '<div class="unmute-button">'),
+            void 0 !== t.mutedImageUrl &&
+              t.mutedImageUrl &&
+              (divBlock += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
+            (divBlock += "</div>"),
+            (divBlock += !t.playIcon
+              ? `<button style="
                   opacity: 1;
                   visibility: visible;
                   z-index:0;
                   background:${t.controlBarColor}" 
                   type="button" class="play-icon-default plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`
-                : ""),
-              (divBlock += "<div>");
+              : ""),
+            (divBlock += "<div>");
 
-            player
-              .querySelector(".plyr__video-embed")
-              .insertAdjacentHTML("beforeend", divBlock);
+          player
+            .querySelector(".plyr__video-embed")
+            .insertAdjacentHTML("beforeend", divBlock);
 
-            const videoSoundOverlay = player.querySelector(
-              ".video-sound-overlay"
-            );
-            videoSoundOverlay.style.backgroundImage = `url(${t.playIcon})`;
+          const videoSoundOverlay = player.querySelector(
+            ".video-sound-overlay"
+          );
+          videoSoundOverlay.style.backgroundImage = `url(${t.playIcon})`;
 
-            videoSoundOverlay.addEventListener("click", () => {
-              videoSoundOverlay.remove();
-              if (o.autoplay && o.muted) {
-                o.volume = 1;
-                o.autoplay = false;
-                o.restart();
-              }
-            });
+          videoSoundOverlay.addEventListener("click", () => {
+            videoSoundOverlay.remove();
+            if (o.autoplay && o.muted) {
+              o.volume = 1;
+              o.autoplay = false;
+              o.restart();
+            }
+          });
 
-            player.style.display = "block";
-          }, 10);
+          player.style.display = "block";
         });
     } else Plyr.setup(".plyr__video-embed");
   });
