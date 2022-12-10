@@ -373,7 +373,7 @@ function init() {
           }
         });
 
-        if (!settings.play) {
+        if (!settings.play && !settings.playIcon) {
           const playBlock = `<button style="
           opacity: 1;
           visibility: visible;
