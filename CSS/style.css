@@ -2,10 +2,11 @@ html,
 body {
   margin: 0;
   height: 100%;
+  background: #f5faff;
 }
 
 .container.d-grid {
-  background-color: #233140;
+  background-color: #f5faff;
 }
 
 .toggle-action,
@@ -29,7 +30,9 @@ body {
 .inputs input[type="text"],
 .inputs input[type="number"] {
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 7px;
+  border: 1px solid #c3f2ff;
+  background: #EEF9FC;
 }
 
 .d-grid {
@@ -44,13 +47,13 @@ body {
 
 .d-grid .sidebar {
   padding: 1rem;
-  background-color: #132232;
+  background-color: #FFFFFF;
   margin: 10px;
   border-radius: 10px;
   color: white;
   font-size: 17px;
   font-family: "Open Sans";
-  box-shadow: 1px 2px 7px 1px #2fcca2;
+  border: 7px solid #def5ff;
 }
 
 .d-grid .sidebar .input {
@@ -61,7 +64,9 @@ body {
 .d-grid .sidebar .input #videoLink {
   width: 95%;
   height: 30px;
-  border-radius: 10px;
+  border-radius: 7px;
+  border: 1px solid #c3f2ff;
+  background: #eef9fc;
 }
 
 .d-grid .sidebar ul {
@@ -216,7 +221,7 @@ iframe {
 }
 
 #submit {
-  background: #37cca2;
+  background: #1cb2f3;
   color: white;
   padding: 10px;
   border: 0;
@@ -227,13 +232,13 @@ iframe {
 }
 
 button#submit:hover {
-  background: #23b78d;
-  border: 2px solid #37cca2;
+  background: #3bc4ff;
+  border: 2px solid #11b7ff;
   color: white;
 }
 
 #w {
-  width: 60%;
+  width: 70%;
   margin: 0 auto;
   margin-top: 50px;
 }
@@ -644,9 +649,11 @@ pre {
 }
 
 label img {
-  width: 20%;
-  outline: white 2px solid;
+  width: 30%;
+  outline: #eef9fc 2px solid;
   margin: 3px;
+  background: linear-gradient(314deg, #0DB8FC, transparent);
+    border-radius: 10px;
 }
 
 label [type="radio"] {
@@ -666,6 +673,10 @@ label [type="radio"] {
 label [type="radio"]:checked + img {
   outline: 3px solid #37cca2;
   border-radius: 5px;
+}
+
+li {
+    color: #0b2c44;
 }
 
 /*# sourceMappingURL=style.css.map */

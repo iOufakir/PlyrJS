@@ -299,9 +299,9 @@ function init() {
       settings.controlBarColor = controlBarColor.value;
       settings.ctaEnabled = ctaCheckbox.checked;
       settings.ctaInputUrl = ctaInputUrl.value;
-      settings.ctaInputTitle = ctaInputTitle.value;
+      settings.ctaInputTitle = encodeURIComponent(ctaInputTitle.value);
       settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
-      settings.ctaHeadline = ctaHeadline.value;
+      settings.ctaHeadline = encodeURIComponent(ctaHeadline.value);
       settings.ctaHeadlineColor = ctaHeadlineColor.value;
       settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
       settings.ctaBtnTextColor = ctaBtnTextColor.value;

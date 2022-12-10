@@ -127,7 +127,10 @@ function init() {
             i++
           ) {
             e[i].style.color = t.progressBarColor;
-            e[i].style.backgroundColor = t.controlBarColor;
+            if(i === 0 || i===e.length-1){
+              e[i].style.backgroundColor = t.controlBarColor;
+            }
+            
           }
 
           const r = player.querySelectorAll(
@@ -171,6 +174,8 @@ function init() {
               o.volume = 1;
               o.autoplay = false;
               o.restart();
+            }else if(!o.playing){
+              o.play();
             }
           });
 
@@ -207,12 +212,16 @@ align-items: center;
 ">
 
 <div style="position: relative;text-align: center;">
-<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${ctaHeadline}</span></p>
+<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${decodeURIComponent(
+    ctaHeadline
+  )}</span></p>
 </div></div>
 
 <div style="position: relative;cursor: pointer;width: 20rem;text-align: center;">
 <div style="background: ${btnBackgroundColor}; border-radius: 5px; letter-spacing: 0px;">
-<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="cta-resume" href="${ctaInputUrl}" target="_blank"><span style="font-size: 2rem;text-align: center;display: block;">${ctaInputTitle}</span></a>
+<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="cta-resume" href="${ctaInputUrl}" target="_blank"><span style="font-size: 2rem;text-align: center;display: block;">${decodeURIComponent(
+    ctaInputTitle
+  )}</span></a>
 </div>
 
 </div>
