@@ -8,6 +8,7 @@ String.prototype.toHtmlEntities = function () {
     return s.match(/[a-z0-9\s]+/i) ? s : "&#" + s.charCodeAt(0) + ";";
   });
 };
+
 function init() {
   const autoplay = document.getElementById("autoplay");
   const controlBar = document.getElementById("control-bar");
@@ -25,6 +26,10 @@ function init() {
     "#cta-btn-background-color"
   );
   const ctaBtnTextColor = document.querySelector("#cta-btn-text-color");
+  const passwordProtectCheckbox = document.querySelector(
+    "#checkbox-password-protect"
+  );
+  const inputPassword = document.querySelector("#input-password");
 
   var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
   
@@ -43,7 +48,7 @@ function init() {
     }
     `;
 
-  var style = document.createElement("style");
+  const style = document.createElement("style");
   style.appendChild(document.createTextNode(css));
   document.head.appendChild(style);
 
@@ -78,11 +83,15 @@ function init() {
       ctaHeadlineColor.closest("li").style.display = "block";
       ctaBtnBackgroundColor.closest("li").style.display = "block";
       ctaBtnTextColor.closest("li").style.display = "block";
+
+      passwordProtectCheckbox.checked = false;
     } else {
       ctaInputTitle.value = "";
       ctaInputUrl.value = "";
       ctaTimeTarget.value = "";
       ctaHeadline.value = "";
+      inputPassword.value = "";
+
       ctaInputTitle.closest("li").style.display = "none";
       ctaInputUrl.closest("li").style.display = "none";
       ctaTimeTarget.closest("li").style.display = "none";
@@ -90,6 +99,37 @@ function init() {
       ctaHeadlineColor.closest("li").style.display = "none";
       ctaBtnBackgroundColor.closest("li").style.display = "none";
       ctaBtnTextColor.closest("li").style.display = "none";
+      inputPassword.closest("li").style.display = "none";
+    }
+    createNewIframe();
+  });
+
+  passwordProtectCheckbox.addEventListener("change", (e) => {
+    if (passwordProtectCheckbox.checked) {
+      ctaInputTitle.closest("li").style.display = "block";
+      ctaTimeTarget.closest("li").style.display = "block";
+      ctaHeadline.closest("li").style.display = "block";
+      ctaHeadlineColor.closest("li").style.display = "block";
+      ctaBtnBackgroundColor.closest("li").style.display = "block";
+      ctaBtnTextColor.closest("li").style.display = "block";
+      inputPassword.closest("li").style.display = "block";
+
+      ctaInputUrl.closest("li").style.display = "none";
+      ctaCheckbox.checked = false;
+    } else {
+      ctaInputTitle.value = "";
+      ctaTimeTarget.value = "";
+      ctaHeadline.value = "";
+      ctaInputUrl.value = "";
+      inputPassword.value = "";
+
+      ctaInputTitle.closest("li").style.display = "none";
+      ctaTimeTarget.closest("li").style.display = "none";
+      ctaHeadline.closest("li").style.display = "none";
+      ctaHeadlineColor.closest("li").style.display = "none";
+      ctaBtnBackgroundColor.closest("li").style.display = "none";
+      ctaBtnTextColor.closest("li").style.display = "none";
+      inputPassword.closest("li").style.display = "none";
     }
     createNewIframe();
   });
@@ -117,10 +157,11 @@ function init() {
   });
 
   ctaTimeTarget.addEventListener("input", (e) => {
-    const ctaModal = document.querySelector(".cta-modal");
-    if (ctaModal) {
-      ctaModal.remove();
-    }
+    let modal = document.querySelector(".cta-modal");
+    modal?.remove();
+
+    modal = document.querySelector(".password-protect-modal");
+    modal?.remove();
   });
 
   muted.addEventListener("change", (event) => {
@@ -298,13 +339,27 @@ function init() {
       settings.progressBarColor = progressBarColor.value;
       settings.controlBarColor = controlBarColor.value;
       settings.ctaEnabled = ctaCheckbox.checked;
-      settings.ctaInputUrl = ctaInputUrl.value;
-      settings.ctaInputTitle = encodeURIComponent(ctaInputTitle.value);
-      settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
-      settings.ctaHeadline = encodeURIComponent(ctaHeadline.value);
-      settings.ctaHeadlineColor = ctaHeadlineColor.value;
-      settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
-      settings.ctaBtnTextColor = ctaBtnTextColor.value;
+      settings.passwordProtectCheckbox = passwordProtectCheckbox.checked;
+      if (settings.ctaEnabled) {
+        settings.ctaInputUrl = ctaInputUrl.value;
+        settings.ctaInputTitle = encodeURIComponent(ctaInputTitle.value);
+        settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
+        settings.ctaHeadline = encodeURIComponent(ctaHeadline.value);
+        settings.ctaHeadlineColor = ctaHeadlineColor.value;
+        settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
+        settings.ctaBtnTextColor = ctaBtnTextColor.value;
+      }
+
+      settings.passwordProtectCheckbox = passwordProtectCheckbox.checked;
+      if (settings.passwordProtectCheckbox) {
+        settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
+        settings.ctaHeadline = encodeURIComponent(ctaHeadline.value);
+        settings.ctaInputTitle = encodeURIComponent(ctaInputTitle.value);
+        settings.ctaHeadlineColor = ctaHeadlineColor.value;
+        settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
+        settings.ctaBtnTextColor = ctaBtnTextColor.value;
+        settings.password = encodeURIComponent(inputPassword.value);
+      }
 
       const dynamicScript = `<div data-plyr-provider="${
         link.includes("vimeo") ? "vimeo" : "youtube"
@@ -396,21 +451,33 @@ function init() {
     p.on("timeupdate", (e) => {
       if (
         p.playing &&
-        ctaCheckbox.checked &&
         ctaTimeTarget.value &&
         p.currentTime >= parseInt(ctaTimeTarget.value).toFixed(2) &&
         p.currentTime < parseFloat(ctaTimeTarget.value + ".1").toFixed(2)
       ) {
-        renderCtaModal(
-          frame,
-          ctaHeadline.value,
-          ctaHeadlineColor.value,
-          ctaInputTitle.value,
-          ctaInputUrl.value,
-          ctaBtnBackgroundColor.value,
-          ctaBtnTextColor.value,
-          p
-        );
+        if (ctaCheckbox.checked) {
+          renderCtaModal(
+            frame,
+            ctaHeadline.value,
+            ctaHeadlineColor.value,
+            ctaInputTitle.value,
+            ctaInputUrl.value,
+            ctaBtnBackgroundColor.value,
+            ctaBtnTextColor.value,
+            p
+          );
+        } else {
+          renderPasswordModal(
+            frame,
+            ctaHeadline.value,
+            ctaHeadlineColor.value,
+            ctaInputTitle.value,
+            ctaBtnBackgroundColor.value,
+            ctaBtnTextColor.value,
+            p
+          );
+        }
+
         p.pause();
       }
     });
@@ -422,6 +489,18 @@ function init() {
         ctaHeadlineColor.value,
         ctaInputTitle.value,
         ctaInputUrl.value,
+        ctaBtnBackgroundColor.value,
+        ctaBtnTextColor.value,
+        p
+      );
+    }
+
+    if (passwordProtectCheckbox.checked) {
+      renderPasswordModal(
+        frame,
+        ctaHeadline.value,
+        ctaHeadlineColor.value,
+        ctaInputTitle.value,
         ctaBtnBackgroundColor.value,
         ctaBtnTextColor.value,
         p
@@ -508,13 +587,66 @@ align-items: center;
 
   frame.querySelectorAll(".cta-resume").forEach((action) => {
     action.addEventListener("click", (e) => {
-      resumeVideo(e, player);
+      resumeVideo(e, player, ".cta-modal");
     });
   });
 }
 
-function resumeVideo(event, player) {
-  event.target.closest(".cta-modal").style.display = "none";
+function renderPasswordModal(
+  frame,
+  headline,
+  headlineColor,
+  inputTitle,
+  btnBackgroundColor,
+  btnTextColor,
+  player
+) {
+  const ctaModal = `<div class="password-protect-modal" style="background-color: rgba(0, 0, 0, 6);height: 100%;width: 100%;z-index: 10;position: absolute;top: 0;left: 0;display: flex;flex-direction: column;">
+
+  <div style="
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+">
+
+<div>
+
+<div style="position: relative;text-align: center;">
+<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${headline}</span></p>
+</div>
+
+<input type="password" placeholder="Enter Password" class="video-input-password" style="background: white;width: 17rem;text-align: center;color: black;border-radius: 0;height: 2.5rem;border-color: rgb(204, 204, 204);border-width: 1px;margin-bottom: 2rem;">
+</div>
+
+<div style="position: relative;cursor: pointer;width: 16rem;text-align: center;margin: auto;">
+<div style="background: ${btnBackgroundColor}; border-radius: 5px; letter-spacing: 0px;">
+<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="password-protect-submit"><span style="font-size: 1.2rem;text-align: center;display: block;">${inputTitle}</span></a>
+</div>
+
+</div>
+</div>
+  
+ </div>
+ 
+ </div>`;
+
+  frame.querySelector(".plyr").insertAdjacentHTML("beforeend", ctaModal);
+
+  const videoPasswordInput = frame.querySelector(".video-input-password");
+
+  frame.querySelectorAll(".password-protect-submit").forEach((action) => {
+    action.addEventListener("click", (e) => {
+      if (videoPasswordInput.value === decodeURIComponent(settings.password)) {
+        resumeVideo(e, player, ".password-protect-modal");
+      }
+    });
+  });
+}
+
+function resumeVideo(event, player, targetClass) {
+  event.target.closest(targetClass).style.display = "none";
   player.play();
 }
 

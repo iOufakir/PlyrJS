@@ -66,6 +66,7 @@ function init() {
       player.insertAdjacentHTML("afterbegin", html);
 
       const o = new Plyr(player, t);
+      console.log(t);
 
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
@@ -90,23 +91,36 @@ function init() {
         o.on("timeupdate", (e) => {
           if (
             o.playing &&
-            t.ctaEnabled &&
             t.ctaTimeTarget &&
-            o.currentTime >= t.ctaTimeTarget.toFixed(2) &&
-            o.currentTime < parseFloat(t.ctaTimeTarget + ".1").toFixed(2)
+            parseInt(o.currentTime) === t.ctaTimeTarget
           ) {
-            renderCtaModal(
-              player,
-              t.ctaHeadline,
-              t.ctaHeadlineColor,
-              t.ctaInputTitle,
-              t.ctaInputUrl,
-              t.ctaBtnBackgroundColor,
-              t.ctaBtnTextColor,
-              o
-            );
+
+            if (t.ctaEnabled) {
+              renderCtaModal(
+                player,
+                t.ctaHeadline,
+                t.ctaHeadlineColor,
+                t.ctaInputTitle,
+                t.ctaInputUrl,
+                t.ctaBtnBackgroundColor,
+                t.ctaBtnTextColor,
+                o
+              );
+            } else {
+              renderPasswordModal(
+                player,
+                t.ctaHeadline,
+                t.ctaHeadlineColor,
+                t.ctaInputTitle,
+                t.ctaBtnBackgroundColor,
+                t.ctaBtnTextColor,
+                t.password,
+                o
+              );
+            }
 
             o.pause();
+            t.ctaTimeTarget = null;
           }
         }),
         o.on("ready", (e) => {
@@ -127,10 +141,9 @@ function init() {
             i++
           ) {
             e[i].style.color = t.progressBarColor;
-            if(i === 0 || i===e.length-1){
+            if (i === 0 || i === e.length - 1) {
               e[i].style.backgroundColor = t.controlBarColor;
             }
-            
           }
 
           const r = player.querySelectorAll(
@@ -174,7 +187,7 @@ function init() {
               o.volume = 1;
               o.autoplay = false;
               o.restart();
-            }else if(!o.playing){
+            } else if (!o.playing) {
               o.play();
             }
           });
@@ -241,13 +254,67 @@ align-items: center;
 
   frame.querySelectorAll(".cta-resume").forEach((action) => {
     action.addEventListener("click", (e) => {
-      resumeVideo(e, player);
+      resumeVideo(e, player, ".cta-modal");
     });
   });
 }
 
-function resumeVideo(event, player) {
-  event.target.closest(".cta-modal").style.display = "none";
+function renderPasswordModal(
+  frame,
+  headline,
+  headlineColor,
+  inputTitle,
+  btnBackgroundColor,
+  btnTextColor,
+  password,
+  player
+) {
+  const ctaModal = `<div class="password-protect-modal" style="background-color: rgba(0, 0, 0, 6);height: 100%;width: 100%;z-index: 10;position: absolute;top: 0;left: 0;display: flex;flex-direction: column;">
+
+  <div style="
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+">
+
+<div>
+
+<div style="position: relative;text-align: center;">
+<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${decodeURIComponent(headline)}</span></p>
+</div>
+
+<input type="password" placeholder="Enter Password" class="video-input-password" style="background: white;width: 17rem;text-align: center;color: black;border-radius: 0;height: 2.5rem;border-color: rgb(204, 204, 204);border-width: 1px;margin-bottom: 2rem;">
+</div>
+
+<div style="position: relative;cursor: pointer;width: 16rem;text-align: center;margin: auto;">
+<div style="background: ${btnBackgroundColor}; border-radius: 5px; letter-spacing: 0px;">
+<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="password-protect-submit"><span style="font-size: 1.2rem;text-align: center;display: block;">${decodeURIComponent(inputTitle)}</span></a>
+</div>
+
+</div>
+</div>
+  
+ </div>
+ 
+ </div>`;
+
+ frame.insertAdjacentHTML("beforeend", ctaModal);
+
+  const videoPasswordInput = frame.querySelector(".video-input-password");
+
+  frame.querySelectorAll(".password-protect-submit").forEach((action) => {
+    action.addEventListener("click", (e) => {
+      if (videoPasswordInput.value === decodeURIComponent(password)) {
+        resumeVideo(e, player, ".password-protect-modal");
+      }
+    });
+  });
+}
+
+function resumeVideo(event, player, targetClass) {
+  event.target.closest(targetClass).style.display = "none";
   player.play();
 }
 

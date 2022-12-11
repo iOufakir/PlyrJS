@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link rel="stylesheet" href="CSS/style.css">
 </head>
 
@@ -53,9 +54,27 @@
                             </div>
                         </div>
                     </li>
+                    <li>
+                        <div class="toggle-action">
+                            <h4>Enable Password Protect</h4>
+                            <div class="toggle">
+                                <input class="tgl tgl-light" id="checkbox-password-protect" type="checkbox" value="false" />
+                                <label class="tgl-btn" for="checkbox-password-protect"></label>
+                            </div>
+                        </div>
+                    </li>
                     <li style="display: none;">
                         <div class="inputs">
-                            <h4>CTA Headline</h4>
+                            <h4>Password</h4>
+                            <div>
+                                <input id="input-password" type="text" placeholder="Password" />
+                                <label class="tgl-btn" for="input-password"></label>
+                            </div>
+                        </div>
+                    </li>
+                    <li style="display: none;">
+                        <div class="inputs">
+                            <h4>Headline</h4>
                             <div>
                                 <input id="cta-headline" type="text" placeholder="Text"/>
                                 <label class="tgl-btn" for="cta-headline"></label>
@@ -72,7 +91,7 @@
                     </li>
                     <li style="display: none;">
                         <div class="inputs">
-                            <h4>CTA Button title</h4>
+                            <h4>Button title</h4>
                             <div>
                                 <input id="cta-input-title" type="text" placeholder="Title"/>
                                 <label class="tgl-btn" for="cta-input-title"></label>
@@ -81,7 +100,7 @@
                     </li>
                     <li style="display: none;">
                         <div class="inputs">
-                            <h4>CTA Button URL</h4>
+                            <h4>Button URL</h4>
                             <div>
                                 <input id="cta-input-url" type="text" placeholder="Url"/>
                                 <label class="tgl-btn" for="cta-input-url"></label>
@@ -106,7 +125,7 @@
                     </li>
                     <li style="display: none;">
                         <div class="inputs">
-                            <h4>CTA Time Target</h4>
+                            <h4>Time Target</h4>
                             <div>
                                 <input id="cta-time-target" type="number" placeholder="In Seconds" />
                                 <label class="tgl-btn" for="cta-time-target"></label>
