@@ -89,13 +89,12 @@ function init() {
             }, 100));
         }),
         o.on("timeupdate", (e) => {
-          if (
-            o.playing &&
-            t.ctaTimeTarget &&
-            parseInt(o.currentTime) === t.ctaTimeTarget
-          ) {
-
-            if (t.ctaEnabled) {
+          if (o.playing) {
+            if (
+              t.ctaEnabled &&
+              t.ctaTimeTarget &&
+              parseInt(o.currentTime) === t.ctaTimeTarget
+            ) {
               renderCtaModal(
                 player,
                 t.ctaHeadline,
@@ -106,21 +105,27 @@ function init() {
                 t.ctaBtnTextColor,
                 o
               );
-            } else {
+
+              o.pause();
+              t.ctaTimeTarget = null;
+            } else if (
+              t.passwordEnabled &&
+              t.passwordTimeTarget &&
+              parseInt(o.currentTime) === t.passwordTimeTarget
+            ) {
               renderPasswordModal(
                 player,
-                t.ctaHeadline,
-                t.ctaHeadlineColor,
-                t.ctaInputTitle,
-                t.ctaBtnBackgroundColor,
-                t.ctaBtnTextColor,
+                t.passwordHeadline,
+                t.passwordHeadlineColor,
+                t.passwordInputTitle,
+                t.passwordBtnBackgroundColor,
+                t.passwordBtnTextColor,
                 t.password,
                 o
               );
+              o.pause();
+              t.passwordTimeTarget = null;
             }
-
-            o.pause();
-            t.ctaTimeTarget = null;
           }
         }),
         o.on("ready", (e) => {
@@ -282,7 +287,9 @@ function renderPasswordModal(
 <div>
 
 <div style="position: relative;text-align: center;">
-<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${decodeURIComponent(headline)}</span></p>
+<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${decodeURIComponent(
+    headline
+  )}</span></p>
 </div>
 
 <input type="password" placeholder="Enter Password" class="video-input-password" style="background: white;width: 17rem;text-align: center;color: black;border-radius: 0;height: 2.5rem;border-color: rgb(204, 204, 204);border-width: 1px;margin-bottom: 2rem;">
@@ -290,7 +297,9 @@ function renderPasswordModal(
 
 <div style="position: relative;cursor: pointer;width: 16rem;text-align: center;margin: auto;">
 <div style="background: ${btnBackgroundColor}; border-radius: 5px; letter-spacing: 0px;">
-<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="password-protect-submit"><span style="font-size: 1.2rem;text-align: center;display: block;">${decodeURIComponent(inputTitle)}</span></a>
+<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="password-protect-submit"><span style="font-size: 1.2rem;text-align: center;display: block;">${decodeURIComponent(
+    inputTitle
+  )}</span></a>
 </div>
 
 </div>
@@ -300,7 +309,7 @@ function renderPasswordModal(
  
  </div>`;
 
- frame.insertAdjacentHTML("beforeend", ctaModal);
+  frame.insertAdjacentHTML("beforeend", ctaModal);
 
   const videoPasswordInput = frame.querySelector(".video-input-password");
 

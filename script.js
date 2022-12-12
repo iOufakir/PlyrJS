@@ -30,6 +30,18 @@ function init() {
     "#checkbox-password-protect"
   );
   const inputPassword = document.querySelector("#input-password");
+  const passwordHeadline = document.querySelector("#password-headline");
+  const passwordHeadlineColor = document.querySelector(
+    "#password-headline-color"
+  );
+  const passwordInputTitle = document.querySelector("#password-input-title");
+  const passwordBtnBackgroundColor = document.querySelector(
+    "#password-btn-background-color"
+  );
+  const passwordBtnTextColor = document.querySelector(
+    "#password-btn-text-color"
+  );
+  const passwordTimeTarget = document.querySelector("#password-time-target");
 
   var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
   
@@ -83,14 +95,11 @@ function init() {
       ctaHeadlineColor.closest("li").style.display = "block";
       ctaBtnBackgroundColor.closest("li").style.display = "block";
       ctaBtnTextColor.closest("li").style.display = "block";
-
-      passwordProtectCheckbox.checked = false;
     } else {
       ctaInputTitle.value = "";
       ctaInputUrl.value = "";
       ctaTimeTarget.value = "";
       ctaHeadline.value = "";
-      inputPassword.value = "";
 
       ctaInputTitle.closest("li").style.display = "none";
       ctaInputUrl.closest("li").style.display = "none";
@@ -99,36 +108,31 @@ function init() {
       ctaHeadlineColor.closest("li").style.display = "none";
       ctaBtnBackgroundColor.closest("li").style.display = "none";
       ctaBtnTextColor.closest("li").style.display = "none";
-      inputPassword.closest("li").style.display = "none";
     }
     createNewIframe();
   });
 
   passwordProtectCheckbox.addEventListener("change", (e) => {
     if (passwordProtectCheckbox.checked) {
-      ctaInputTitle.closest("li").style.display = "block";
-      ctaTimeTarget.closest("li").style.display = "block";
-      ctaHeadline.closest("li").style.display = "block";
-      ctaHeadlineColor.closest("li").style.display = "block";
-      ctaBtnBackgroundColor.closest("li").style.display = "block";
-      ctaBtnTextColor.closest("li").style.display = "block";
+      passwordInputTitle.closest("li").style.display = "block";
+      passwordTimeTarget.closest("li").style.display = "block";
+      passwordHeadline.closest("li").style.display = "block";
+      passwordHeadlineColor.closest("li").style.display = "block";
+      passwordBtnBackgroundColor.closest("li").style.display = "block";
+      passwordBtnTextColor.closest("li").style.display = "block";
       inputPassword.closest("li").style.display = "block";
-
-      ctaInputUrl.closest("li").style.display = "none";
-      ctaCheckbox.checked = false;
     } else {
-      ctaInputTitle.value = "";
-      ctaTimeTarget.value = "";
-      ctaHeadline.value = "";
-      ctaInputUrl.value = "";
+      passwordInputTitle.value = "";
+      passwordTimeTarget.value = "";
+      passwordHeadline.value = "";
       inputPassword.value = "";
 
-      ctaInputTitle.closest("li").style.display = "none";
-      ctaTimeTarget.closest("li").style.display = "none";
-      ctaHeadline.closest("li").style.display = "none";
-      ctaHeadlineColor.closest("li").style.display = "none";
-      ctaBtnBackgroundColor.closest("li").style.display = "none";
-      ctaBtnTextColor.closest("li").style.display = "none";
+      passwordInputTitle.closest("li").style.display = "none";
+      passwordTimeTarget.closest("li").style.display = "none";
+      passwordHeadline.closest("li").style.display = "none";
+      passwordHeadlineColor.closest("li").style.display = "none";
+      passwordBtnBackgroundColor.closest("li").style.display = "none";
+      passwordBtnTextColor.closest("li").style.display = "none";
       inputPassword.closest("li").style.display = "none";
     }
     createNewIframe();
@@ -159,7 +163,27 @@ function init() {
   ctaTimeTarget.addEventListener("input", (e) => {
     let modal = document.querySelector(".cta-modal");
     modal?.remove();
+  });
 
+  passwordInputTitle.addEventListener("input", (e) => {
+    createNewIframe();
+  });
+
+  passwordHeadlineColor.addEventListener("change", (e) => {
+    createNewIframe();
+  });
+  passwordBtnBackgroundColor.addEventListener("change", (e) => {
+    createNewIframe();
+  });
+  passwordBtnTextColor.addEventListener("change", (e) => {
+    createNewIframe();
+  });
+
+  passwordHeadline.addEventListener("input", (e) => {
+    createNewIframe();
+  });
+
+  passwordTimeTarget.addEventListener("input", (e) => {
     modal = document.querySelector(".password-protect-modal");
     modal?.remove();
   });
@@ -339,7 +363,6 @@ function init() {
       settings.progressBarColor = progressBarColor.value;
       settings.controlBarColor = controlBarColor.value;
       settings.ctaEnabled = ctaCheckbox.checked;
-      settings.passwordProtectCheckbox = passwordProtectCheckbox.checked;
       if (settings.ctaEnabled) {
         settings.ctaInputUrl = ctaInputUrl.value;
         settings.ctaInputTitle = encodeURIComponent(ctaInputTitle.value);
@@ -350,14 +373,16 @@ function init() {
         settings.ctaBtnTextColor = ctaBtnTextColor.value;
       }
 
-      settings.passwordProtectCheckbox = passwordProtectCheckbox.checked;
-      if (settings.passwordProtectCheckbox) {
-        settings.ctaTimeTarget = parseInt(ctaTimeTarget.value);
-        settings.ctaHeadline = encodeURIComponent(ctaHeadline.value);
-        settings.ctaInputTitle = encodeURIComponent(ctaInputTitle.value);
-        settings.ctaHeadlineColor = ctaHeadlineColor.value;
-        settings.ctaBtnBackgroundColor = ctaBtnBackgroundColor.value;
-        settings.ctaBtnTextColor = ctaBtnTextColor.value;
+      settings.passwordEnabled = passwordProtectCheckbox.checked;
+      if (settings.passwordEnabled) {
+        settings.passwordTimeTarget = parseInt(passwordTimeTarget.value);
+        settings.passwordHeadline = encodeURIComponent(passwordHeadline.value);
+        settings.passwordInputTitle = encodeURIComponent(
+          passwordInputTitle.value
+        );
+        settings.passwordHeadlineColor = passwordHeadlineColor.value;
+        settings.passwordBtnBackgroundColor = passwordBtnBackgroundColor.value;
+        settings.passwordBtnTextColor = passwordBtnTextColor.value;
         settings.password = encodeURIComponent(inputPassword.value);
       }
 
@@ -449,13 +474,12 @@ function init() {
     });
 
     p.on("timeupdate", (e) => {
-      if (
-        p.playing &&
-        ctaTimeTarget.value &&
-        p.currentTime >= parseInt(ctaTimeTarget.value).toFixed(2) &&
-        p.currentTime < parseFloat(ctaTimeTarget.value + ".1").toFixed(2)
-      ) {
-        if (ctaCheckbox.checked) {
+      if (p.playing) {
+        if (
+          ctaCheckbox.checked &&
+          ctaTimeTarget.value &&
+          parseInt(p.currentTime) === parseInt(ctaTimeTarget.value)
+        ) {
           renderCtaModal(
             frame,
             ctaHeadline.value,
@@ -466,23 +490,29 @@ function init() {
             ctaBtnTextColor.value,
             p
           );
-        } else {
+          p.pause();
+          ctaTimeTarget.value = null;
+        } else if (
+          passwordProtectCheckbox.checked &&
+          passwordTimeTarget.value &&
+          parseInt(p.currentTime) === parseInt(passwordTimeTarget.value)
+        ) {
           renderPasswordModal(
             frame,
-            ctaHeadline.value,
-            ctaHeadlineColor.value,
-            ctaInputTitle.value,
-            ctaBtnBackgroundColor.value,
-            ctaBtnTextColor.value,
+            passwordHeadline.value,
+            passwordHeadlineColor.value,
+            passwordInputTitle.value,
+            passwordBtnBackgroundColor.value,
+            passwordBtnTextColor.value,
             p
           );
+          p.pause();
+          passwordTimeTarget.value = null;
         }
-
-        p.pause();
       }
     });
 
-    if (ctaCheckbox.checked) {
+    if (ctaCheckbox.checked && !ctaTimeTarget.value) {
       renderCtaModal(
         frame,
         ctaHeadline.value,
@@ -493,16 +523,14 @@ function init() {
         ctaBtnTextColor.value,
         p
       );
-    }
-
-    if (passwordProtectCheckbox.checked) {
+    } else if (passwordProtectCheckbox.checked && !passwordTimeTarget.value) {
       renderPasswordModal(
         frame,
-        ctaHeadline.value,
-        ctaHeadlineColor.value,
-        ctaInputTitle.value,
-        ctaBtnBackgroundColor.value,
-        ctaBtnTextColor.value,
+        passwordHeadline.value,
+        passwordHeadlineColor.value,
+        passwordInputTitle.value,
+        passwordBtnBackgroundColor.value,
+        passwordBtnTextColor.value,
         p
       );
     }
@@ -562,12 +590,12 @@ align-items: center;
 ">
 
 <div style="position: relative;text-align: center;">
-<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${ctaHeadline}</span></p>
+<div style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;    margin-bottom: 1rem;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${ctaHeadline}</span></p>
 </div></div>
 
 <div style="position: relative;cursor: pointer;width: 20rem;text-align: center;">
 <div style="background: ${btnBackgroundColor}; border-radius: 5px; letter-spacing: 0px;">
-<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="cta-resume" href="${ctaInputUrl}" target="_blank"><span style="font-size: 2rem;text-align: center;display: block;">${ctaInputTitle}</span></a>
+<a style="color: ${btnTextColor};text-decoration: none;text-align: center;display: block;" class="cta-resume" href="${ctaInputUrl}" target="_blank"><span style="font-size: 1.7rem;text-align: center;display: block;">${ctaInputTitle}</span></a>
 </div>
 
 </div>
@@ -601,7 +629,7 @@ function renderPasswordModal(
   btnTextColor,
   player
 ) {
-  const ctaModal = `<div class="password-protect-modal" style="background-color: rgba(0, 0, 0, 6);height: 100%;width: 100%;z-index: 10;position: absolute;top: 0;left: 0;display: flex;flex-direction: column;">
+  const modal = `<div class="password-protect-modal" style="background-color: rgba(0, 0, 0, 6);height: 100%;width: 100%;z-index: 10;position: absolute;top: 0;left: 0;display: flex;flex-direction: column;">
 
   <div style="
     height: 100%;
@@ -614,7 +642,7 @@ function renderPasswordModal(
 <div>
 
 <div style="position: relative;text-align: center;">
-<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${headline}</span></p>
+<div click="function () { [native code] }" style="border-radius: 0px; padding-left: 0%; padding-right: 0%; letter-spacing: 2px;margin-bottom:1rem;"><p><span style="color: ${headlineColor}; font-size: 18pt;">${headline}</span></p>
 </div>
 
 <input type="password" placeholder="Enter Password" class="video-input-password" style="background: white;width: 17rem;text-align: center;color: black;border-radius: 0;height: 2.5rem;border-color: rgb(204, 204, 204);border-width: 1px;margin-bottom: 2rem;">
@@ -632,7 +660,7 @@ function renderPasswordModal(
  
  </div>`;
 
-  frame.querySelector(".plyr").insertAdjacentHTML("beforeend", ctaModal);
+  frame.querySelector(".plyr").insertAdjacentHTML("beforeend", modal);
 
   const videoPasswordInput = frame.querySelector(".video-input-password");
 

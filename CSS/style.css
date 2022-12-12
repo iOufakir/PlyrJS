@@ -1,6 +1,6 @@
 html,
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   margin: 0;
   height: 100%;
   background: #f5faff;
@@ -28,27 +28,20 @@ body {
   margin-right: 10px;
 }
 
-.inputs input[type="text"],
-.inputs input[type="number"] {
-  padding: 10px;
-  border-radius: 7px;
-  border: 1px solid #c3f2ff;
-  background: #EEF9FC;
-}
 
 .d-grid {
   height: 100vh;
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 3fr;
-  grid-template-columns: 1fr 3fr;
+  -ms-grid-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 }
 
 .d-grid .sidebar {
   padding: 1rem;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   margin: 10px;
   border-radius: 10px;
   color: white;
@@ -59,14 +52,6 @@ body {
 .d-grid .sidebar .input {
   padding: 2rem;
   margin-top: 0px;
-}
-
-.d-grid .sidebar .input #videoLink {
-  width: 95%;
-  height: 30px;
-  border-radius: 7px;
-  border: 1px solid #c3f2ff;
-  background: #eef9fc;
 }
 
 .d-grid .sidebar ul {
@@ -213,28 +198,6 @@ iframe {
 .input {
   text-align: center;
   margin-top: 30px;
-}
-
-#videoLink {
-  width: 60%;
-  padding: 7px;
-}
-
-#submit {
-  background: #1cb2f3;
-  color: white;
-  padding: 10px;
-  border: 0;
-  width: 100%;
-  font-size: 30px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-button#submit:hover {
-  background: #3bc4ff;
-  border: 2px solid #11b7ff;
-  color: white;
 }
 
 #w {
@@ -576,23 +539,6 @@ pre {
   margin-top: -100px;
 }
 
-#loader {
-  position: absolute;
-  background: #000000a3;
-  width: 100%;
-  top: 0;
-  bottom: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
 #loader .lds-ripple {
   display: inline-block;
   position: relative;
@@ -649,11 +595,10 @@ pre {
 }
 
 label img {
-  width: 30%;
   outline: #eef9fc 2px solid;
   margin: 3px;
-  background: linear-gradient(314deg, #0DB8FC, transparent);
-    border-radius: 10px;
+  background: linear-gradient(314deg, #0db8fc, transparent);
+  border-radius: 10px;
 }
 
 label [type="radio"] {
@@ -676,7 +621,7 @@ label [type="radio"]:checked + img {
 }
 
 li {
-    color: #0b2c44;
+  color: #0b2c44;
 }
 
 /*# sourceMappingURL=style.css.map */

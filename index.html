@@ -6,226 +6,383 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <link rel="stylesheet" href="CSS/style.css">
 </head>
 
 <body>
-    <div class="container d-grid">
-        <div class="sidebar">
-            <div class="input">
-			<img src="https://vidflows.com/wp-content/uploads/2022/11/VIDFLOWS.png" alt="HTML5 Icon" width="228" height="52">
-                <ul>
-                    <li>
-                        <input type="text" name="" id="videoLink" value="" placeholder="YouTube Video Link">
-                    </li>
-                    <li>
-                        <div class="toggle-action">
-                            <h4>Autoplay OFF/ON</h4>
-                            <div class="toggle">
-                                <input class="tgl tgl-light" id="autoplay" type="checkbox" value="1" />
-                                <label class="tgl-btn" for="autoplay"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="toggle-action">
-                            <h4>Muted Autoplay</h4>
-                            <div class="toggle">
-                                <input class="tgl tgl-light" id="muted" type="checkbox" value="1" />
-                                <label class="tgl-btn" for="muted"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Muted Icon/Image URL</h4>
-                            <div class="color-picker">
-                                <input type="text" id="muted-image" value="">
-                            </div>
-                        </div>
-                    </li>
-                    <hr/>
-                    <li>
-                        <div class="toggle-action">
-                            <h4>Enable CTA</h4>
-                            <div class="toggle">
-                                <input class="tgl tgl-light" id="cta" type="checkbox" value="false" />
-                                <label class="tgl-btn" for="cta"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="toggle-action">
-                            <h4>Enable Password Protect</h4>
-                            <div class="toggle">
-                                <input class="tgl tgl-light" id="checkbox-password-protect" type="checkbox" value="false" />
-                                <label class="tgl-btn" for="checkbox-password-protect"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Password</h4>
-                            <div>
-                                <input id="input-password" type="text" placeholder="Password" />
-                                <label class="tgl-btn" for="input-password"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Headline</h4>
-                            <div>
-                                <input id="cta-headline" type="text" placeholder="Text"/>
-                                <label class="tgl-btn" for="cta-headline"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Headline Color</h4>
-                            <div class="color-picker">
-                                <input type="color" id="cta-headline-color" value="#ffffff">
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Button title</h4>
-                            <div>
-                                <input id="cta-input-title" type="text" placeholder="Title"/>
-                                <label class="tgl-btn" for="cta-input-title"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Button URL</h4>
-                            <div>
-                                <input id="cta-input-url" type="text" placeholder="Url"/>
-                                <label class="tgl-btn" for="cta-input-url"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Button Background Color</h4>
-                            <div class="color-picker">
-                                <input type="color" id="cta-btn-background-color" value="#00b3ff">
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Button Text Color</h4>
-                            <div class="color-picker">
-                                <input type="color" id="cta-btn-text-color" value="#ffffff">
-                            </div>
-                        </div>
-                    </li>
-                    <li style="display: none;">
-                        <div class="inputs">
-                            <h4>Time Target</h4>
-                            <div>
-                                <input id="cta-time-target" type="number" placeholder="In Seconds" />
-                                <label class="tgl-btn" for="cta-time-target"></label>
-                            </div>
-                        </div>
-                    </li>
-                    <hr/>
-                    <li>
-                        <div class="inputs">
-                            <h4>Thumbnail URL</h4>
-                            <div class="color-picker">
-                                <input type="text" id="thumbnail-url" value="">
-                            </div>
 
-                        </div>
-                    </li>
-                    <li>
-                        <div class="toggle-action">
-                            <h4>Hide Control Bar</h4>
-                            <div class="toggle">
-                                <input class="tgl tgl-light" id="control-bar" type="checkbox" value="1" />
-                                <label class="tgl-btn" for="control-bar"></label>
-                            </div>
-                        </div>
-                    </li>
+    <div class="d-grid">
+        <div class="sidebar w-full">
 
-                    <li>
-                        <div class="inputs">
-                            <h4>Control bar</h4>
-                            <div class="color-picker">
-                                <input type="color" id="control-bar-color" value="#00b3ff">
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="inputs">
-                            <h4>Progress bar</h4>
-                            <div class="color-picker">
-                                <input type="color" id="progress-bar-color" value="#ffffff">
-                            </div>
+            <div class="input max-w-md mx-auto">
 
-                        </div>
-                    </li>
+                <img class="mb-2 mx-auto" src="https://vidflows.com/wp-content/uploads/2022/11/VIDFLOWS.png"
+                    alt="HTML5 Icon" width="228" height="52">
 
-                    <li>
-                        <div class="inputs">
-                            <h4>Aspect Ratio</h4>
-                            <div class="inputs" style="justify-content: flex-end;">
-                                <input type="number" id="width" style="width: 20%;" value="16"> &nbsp;&nbsp; :
-                                &nbsp;&nbsp;<input style="width: 20%;" type="number" id="height" value="9">
-                            </div>
+                <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+                    <ul id="myTab" data-tabs-toggle="#myTabContent"
+                        class="flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400"
+                        role="tablist">
 
-                        </div>
-                    </li>
-                    <li>
-                        <label>
-                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/big-play-button.png">
-                            <img src="https://app.vidflows.com/player/images/big-play-button.png">
-                        </label>
-                        <label>
-                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon.gif">
-                            <img src="https://app.vidflows.com/player/images/play_icon.gif">
-                        </label>
-                        <label>
-                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon2.gif">
-                            <img src="https://app.vidflows.com/player/images/play_icon2.gif">
-                        </label>
-                        <label>
-                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon3.gif">
-                            <img src="https://app.vidflows.com/player/images/play_icon3.gif">
-                        </label>
-                        <label>
-                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon4.gif">
-                            <img src="https://app.vidflows.com/player/images/play_icon4.gif">
-                        </label>
-                        <label>
-                            <input type="radio" class="playIcon" name="column_j" value="https://app.vidflows.com/player/images/play_icon5.gif">
-                            <img src="https://app.vidflows.com/player/images/play_icon5.gif">
-                        </label>
-                    </li>
-                </ul>
-                <button id="submit" class="createNewIframe"> Create </button>
-            </div>
-        </div>
-        <div class="main">
-            <div class="w" id="w">
-                <div class="plyr__video-embed" id="player">
+                        <li class="mr-2" role="presentation">
+                            <button id="main-tab" data-tabs-target="#main"
+                                class="inline-flex p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                type="button" aria-current="page" role="tab" aria-controls="main" aria-selected="false">
+                                <svg aria-hidden="true" class="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                                    </path>
+                                </svg>
+                                Customize
+                            </button>
+                        </li>
+                        <li class="mr-2" role="presentation">
+                            <button id="cta-tab" data-tabs-target="#cta-tab-target"
+                                class="inline-flex p-4 rounded-t-lg border-b-2" aria-current="page" role="tab"
+                                aria-controls="cta-tab" aria-selected="false">
 
+                                <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                                    </path>
+                                </svg>
+
+                                CTA
+                            </button>
+                        </li>
+                        <li class="mr-2" role="presentation">
+                            <button id="password-tab" data-tabs-target="#password-tab-target"
+                            class="inline-flex p-4 rounded-t-lg border-b-2"
+                                aria-current="page" role="tab" aria-controls="password-tab" aria-selected="false">
+                                <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                    </path>
+                                </svg>
+
+                                Password
+                            </button>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div id="myTabContent">
+                    <div class="hidden p-4" id="main" role="tabpanel" aria-labelledby="main-tab">
+
+                        <ul class="space-y-1 max-w-md list-none list-inside text-gray-500 dark:text-gray-400">
+                            <li class="pb-4 pt-4">
+                                <input class="border-[#1da1f2] border-2 rounded-lg w-full p-3" type="text" name=""
+                                    id="videoLink" value="" placeholder="YouTube Video Link">
+                            </li>
+                            <li class="pb-4 pt-4">
+                                <div class="toggle-action">
+                                    <h4>Autoplay OFF/ON</h4>
+                                    <div class="toggle">
+                                        <input class="tgl tgl-light" id="autoplay" type="checkbox" value="1" />
+                                        <label class="tgl-btn" for="autoplay"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="toggle-action">
+                                    <h4>Muted Autoplay</h4>
+                                    <div class="toggle">
+                                        <input class="tgl tgl-light" id="muted" type="checkbox" value="1" />
+                                        <label class="tgl-btn" for="muted"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Muted Icon/Image URL</h4>
+                                    <div class="color-picker">
+                                        <input class="border-[#1da1f2] border-2 rounded-lg p-2" type="text"
+                                            id="muted-image" value="">
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="pb-4 pt-4">
+                                <div class="inputs">
+                                    <h4>Thumbnail URL</h4>
+                                    <div class="color-picker">
+                                        <input class="border-[#1da1f2] border-2 rounded-lg p-2" type="text"
+                                            id="thumbnail-url" value="" placeholder="Thumbnail">
+                                    </div>
+
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4">
+                                <div class="toggle-action">
+                                    <h4>Hide Control Bar</h4>
+                                    <div class="toggle">
+                                        <input class="tgl tgl-light" id="control-bar" type="checkbox" value="1" />
+                                        <label class="tgl-btn" for="control-bar"></label>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="pb-4 pt-4">
+                                <div class="inputs">
+                                    <h4>Control bar</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="control-bar-color" value="#00b3ff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4">
+                                <div class="inputs">
+                                    <h4>Progress bar</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="progress-bar-color" value="#ffffff">
+                                    </div>
+
+                                </div>
+                            </li>
+
+                            <li class="pb-4 pt-4">
+                                <div class="inputs">
+                                    <h4>Aspect Ratio</h4>
+                                    <div class="inputs" style="justify-content: flex-end;">
+                                        <input class="border-[#1da1f2] border-2 rounded-lg p-2" type="number" id="width"
+                                            style="width: 20%;" value="16"> &nbsp;&nbsp; :
+                                        &nbsp;&nbsp;<input class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            style="width: 20%;" type="number" id="height" value="9">
+                                    </div>
+
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4 grid grid-cols-3 gap-2 flex items-center justify-items-center">
+                                <label>
+                                    <input type="radio" class="playIcon" name="column_j"
+                                        value="images/big-play-button.png">
+                                    <img class="w-20" src="images/big-play-button.png">
+                                </label>
+                                <label>
+                                    <input type="radio" class="playIcon" name="column_j" value="images/play_icon.gif">
+                                    <img class="w-20" src="images/play_icon.gif">
+                                </label>
+                                <label>
+                                    <input type="radio" class="playIcon" name="column_j" value="images/play_icon2.gif">
+                                    <img class="w-20" src="images/play_icon2.gif">
+                                </label>
+                                <label>
+                                    <input type="radio" class="playIcon" name="column_j" value="images/play_icon3.gif">
+                                    <img class="w-20" src="images/play_icon3.gif">
+                                </label>
+                                <label>
+                                    <input type="radio" class="playIcon" name="column_j" value="images/play_icon4.gif">
+                                    <img class="w-20" src="images/play_icon4.gif">
+                                </label>
+                                <label>
+                                    <input type="radio" class="playIcon" name="column_j" value="images/play_icon5.gif">
+                                    <img class="w-20" src="images/play_icon5.gif">
+                                </label>
+                            </li>
+                        </ul>
+                        <button id="submit"
+                            class="createNewIframe text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none focus:ring-[#1da1f2]/50 font-medium rounded-lg text-m px-5 py-2.5 text-center dark:focus:ring-[#1da1f2]/55 w-full">
+                            Create </button>
+
+                    </div>
+                    <div class="hidden p-4" id="cta-tab-target" role="tabpanel" aria-labelledby="cta-tab">
+
+                        <ul class="space-y-1 max-w-md list-none list-inside text-gray-500 dark:text-gray-400">
+
+                            <li class="pb-4 pt-4">
+                                <div class="toggle-action">
+                                    <h4>Enable CTA</h4>
+                                    <div class="toggle">
+                                        <input class="tgl tgl-light" id="cta" type="checkbox" value="false" />
+                                        <label class="tgl-btn" for="cta"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Headline</h4>
+                                    <div>
+                                        <input id="cta-headline" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="text" placeholder="Text" />
+                                        <label class="tgl-btn" for="cta-headline"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Headline Color</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="cta-headline-color" value="#ffffff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button title</h4>
+                                    <div>
+                                        <input id="cta-input-title" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="text" placeholder="Title" />
+                                        <label class="tgl-btn" for="cta-input-title"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button URL</h4>
+                                    <div>
+                                        <input id="cta-input-url" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="text" placeholder="Url" />
+                                        <label class="tgl-btn" for="cta-input-url"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button Background Color</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="cta-btn-background-color" value="#00b3ff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button Text Color</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="cta-btn-text-color" value="#ffffff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Time Target</h4>
+                                    <div>
+                                        <input id="cta-time-target" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="number" placeholder="In Seconds" />
+                                        <label class="tgl-btn" for="cta-time-target"></label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div class="hidden p-4" id="password-tab-target" role="tabpanel" aria-labelledby="password-tab">
+
+                        <ul class="space-y-1 max-w-md list-none list-inside text-gray-500 dark:text-gray-400">
+
+
+                            <li class="pb-4 pt-4">
+                                <div class="toggle-action">
+                                    <h4>Enable Password Protect</h4>
+                                    <div class="toggle">
+                                        <input class="tgl tgl-light" id="checkbox-password-protect" type="checkbox"
+                                            value="false" />
+                                        <label class="tgl-btn" for="checkbox-password-protect"></label>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li style="display: none;">
+                                <div class="inputs">
+                                    <h4>Password</h4>
+                                    <div>
+                                        <input id="input-password" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="text" placeholder="Password" />
+                                        <label class="tgl-btn" for="input-password"></label>
+                                    </div>
+                                </div>
+                            </li>
+
+
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Headline</h4>
+                                    <div>
+                                        <input id="password-headline" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="text" placeholder="Text" />
+                                        <label class="tgl-btn" for="password-headline"></label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Headline Color</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="password-headline-color" value="#ffffff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button title</h4>
+                                    <div>
+                                        <input id="password-input-title" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="text" placeholder="Title" />
+                                        <label class="tgl-btn" for="password-input-title"></label>
+                                    </div>
+                                </div>
+                            </li>
+                         
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button Background Color</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="password-btn-background-color" value="#00b3ff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Button Text Color</h4>
+                                    <div class="color-picker">
+                                        <input type="color" id="password-btn-text-color" value="#ffffff">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="pb-4 pt-4" style="display: none;">
+                                <div class="inputs">
+                                    <h4>Time Target</h4>
+                                    <div>
+                                        <input id="password-time-target" class="border-[#1da1f2] border-2 rounded-lg p-2"
+                                            type="number" placeholder="In Seconds" />
+                                        <label class="tgl-btn" for="password-time-target"></label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
 
                 </div>
+
+
             </div>
-            <div id="codeSnippet"></div>
+        </div>
+        <div class="main flex flex-col justify-around	">
+            <div class="w" id="w">
+                <div class="plyr__video-embed" id="player"> </div>
+            </div>
+            <div id="codeSnippet" class="relative left-12"></div>
         </div>
     </div>
-    <div id="loader" style="display:none;">
+    <div id="loader"
+        class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen overflow-hidden bg-gray-700 opacity-75 flex flex-col items-center justify-center"
+        style="display:none;">
         <div class="lds-ripple">
             <div></div>
             <div></div>
         </div>
     </div>
+
+    <script src="https://unpkg.com/flowbite@1.5.5/dist/flowbite.js"></script>
+
     <script>
         const script = document.createElement('script')
         script.src = './script.js?v=' + Date.now();
