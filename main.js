@@ -25,7 +25,6 @@ const Player = {
     (async () => {
       await load_scripts([
         "https://cdn.plyr.io/3.7.3/plyr.js",
-        "https://code.jquery.com/jquery-3.6.0.js",
         "https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js",
       ]);
 
@@ -41,10 +40,15 @@ const Player = {
 
 function init() {
   document.querySelectorAll(".plyr__video-embed").forEach(function (player) {
-    player.style.display = "none";
-
     var e = player.getAttribute("video-details");
     if (e && player) {
+      const t = JSON.parse(window.atob(e.split("=")[1]));
+      const playerName = getOnlinePlayer(t.link);
+
+      if (playerName) {
+        player.style.display = "none";
+      }
+
       var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
        
         `;
@@ -52,20 +56,27 @@ function init() {
       style.appendChild(document.createTextNode(css));
       document.head.appendChild(style);
 
-      const t = JSON.parse(window.atob(e.split("=")[1]));
-    
       const styles = `<style>.video-sound-overlay {\n            width: 100%; z-index:4; \n            height: 100%;\n            \n            background-repeat: no-repeat;\n            position: absolute;\n            left: 0%;\n            right: 0%;\n            top: 0%;\n            bottom: 0%;\n            margin: auto;\n            background-size: 20%;\n            background-position: center;\n        }\n\n        
       .video-sound-overlay .play-button {\n            position: absolute;\n            top: 50%;\n            left: 50%;\n            margin-left: -100px;\n            margin-top: -100px;\n        }\n        .plyr iframe[id^='youtube'] {\n            top: -50%;\n            height: 200%;\n        }\n\n        iframe {\n            pointer-events: none;\n        }\n        </style>`;
       document.head.insertAdjacentHTML("beforeend", styles);
 
-      let html = `<iframe src="${
-        t.link
-      }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&background=1&autoplay=${
-        t.autoplay ? 1 : 0
-      }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
+      let html = !playerName
+        ? `<video playsinline controls>
+     <source src="${t.link}" type="video/mp4" />
+    </video>`
+        : `<iframe loading="lazy" 
+    src="${
+      t.link
+    }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&background=1&autoplay=${
+            t.autoplay ? 1 : 0
+          }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
+
       player.insertAdjacentHTML("afterbegin", html);
 
-      const o = new Plyr(player, t);
+      const o = new Plyr(
+        playerName ? player : player.querySelector("video"),
+        t
+      );
 
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
@@ -80,7 +91,7 @@ function init() {
             }),
             videoSoundOverlay ? videoSoundOverlay.remove() : "",
             setTimeout(() => {
-              t.volume = 1;
+              o.volume = 1;
 
               if (o.autoplay) {
                 o.play(), o.restart();
@@ -176,9 +187,13 @@ function init() {
               : ""),
             (divBlock += "<div>");
 
-          player
-            .querySelector(".plyr__video-embed")
-            .insertAdjacentHTML("beforeend", divBlock);
+          if (playerName) {
+            player
+              .querySelector(".plyr__video-embed")
+              .insertAdjacentHTML("beforeend", divBlock);
+          } else {
+            player.querySelector(".plyr__video-wrapper").insertAdjacentHTML("beforeend", divBlock);
+          }
 
           const videoSoundOverlay = player.querySelector(
             ".video-sound-overlay"
@@ -319,6 +334,15 @@ function renderPasswordModal(
       }
     });
   });
+}
+
+function getOnlinePlayer(link) {
+  if (link.includes("vimeo")) {
+    return "vimeo";
+  } else if (link.includes("youtube")) {
+    return "youtube";
+  }
+  return null;
 }
 
 function resumeVideo(event, player, targetClass) {

@@ -279,9 +279,13 @@ function init() {
       document.head.appendChild(style);
     });
 
-    let html = `<div data-plyr-provider="${
-      link.includes("vimeo") ? "vimeo" : "youtube"
-    }" class="plyr__video-embed" id="player" playsinline autoplay muted loop>
+    const playerName = getOnlinePlayer(link);
+
+    let html = !playerName
+      ? `<video class="plyr__video-embed" id="player" playsinline controls>
+     <source src="${link}" type="video/mp4" />
+      </video>`
+      : `<div data-plyr-provider="${playerName}" class="plyr__video-embed" id="player" playsinline autoplay muted loop>
      <iframe src="${link}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&background=1&mute=1&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
      </div>\n`;
 
@@ -308,6 +312,7 @@ function init() {
     settings.ratio = w + ":" + h;
 
     settings.storage = { enabled: false };
+
     const p = new Plyr("#player", settings);
 
     if (p.isVimeo && settings.autoplay && settings.muted) {
@@ -317,29 +322,6 @@ function init() {
     if (thumbnail.value) {
       p.poster = thumbnail.value;
     }
-
-    p.once("pause", (event) => {
-      const videoSoundOverlay = player.querySelector(".video-sound-overlay");
-      if (typeof settings.muted != "undefined") {
-        if (settings.muted == true) {
-          settings.muted = false;
-          document.querySelectorAll("[data-plyr]").forEach((ele) => {
-            if (ele.getAttribute("data-plyr") == "mute") {
-              settings.volume = 1;
-              ele.click();
-            }
-          });
-          videoSoundOverlay ? videoSoundOverlay.remove() : "",
-            setTimeout(() => {
-              settings.volume = 1;
-              if (p.autoplay) {
-                p.play();
-                p.restart();
-              }
-            }, 100);
-        }
-      }
-    });
 
     p.on("ready", (event) => {
       var progressBar = document.querySelectorAll(
@@ -386,9 +368,7 @@ function init() {
         settings.password = encodeURIComponent(inputPassword.value);
       }
 
-      const dynamicScript = `<div data-plyr-provider="${
-        link.includes("vimeo") ? "vimeo" : "youtube"
-      }" class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
+      const dynamicScript = `<div ${playerName ? "data-plyr-provider=\""+playerName + "\"": "" } class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
         JSON.stringify(settings)
       )}"></div>
         \n<!-- ADD THE CODE BELOW ONLY ONCE IN YOUR WEBSITE. (IF YOU HAVE IT ALREADY, THEN DON'T INCLUDE IT!) !-->
@@ -398,6 +378,7 @@ function init() {
             Player.run();
         });
         </script>`;
+
       if (displayCode) {
         const codeSnippet = document.createElement("pre");
         document.getElementById("codeSnippet").appendChild(codeSnippet);
@@ -412,7 +393,13 @@ function init() {
         }
         overlay += `</div>`;
         overlay += `</div>`;
-        frame.firstChild.insertAdjacentHTML("beforeend", overlay);
+        if (playerName) {
+          frame.firstChild.insertAdjacentHTML("beforeend", overlay);
+        } else {
+          frame
+            .querySelector(".plyr__video-wrapper")
+            .insertAdjacentHTML("beforeend", overlay);
+        }
 
         const style = `<style>.video-sound-overlay {
             width: 100%;
@@ -449,7 +436,7 @@ function init() {
         </style>`;
         document.head.insertAdjacentHTML("beforeend", style);
 
-        const videoSoundOverlay = player.querySelector(".video-sound-overlay");
+        const videoSoundOverlay = frame.querySelector(".video-sound-overlay");
         if (!settings.play && !settings.playIcon) {
           const playBlock = `<button style="
           opacity: 1;
@@ -471,6 +458,31 @@ function init() {
       }
 
       Player.hideLoader();
+    });
+
+    p.once("pause", (event) => {
+      if (playerName) {
+        const videoSoundOverlay = player.querySelector(".video-sound-overlay");
+        if (typeof settings.muted != "undefined") {
+          if (settings.muted == true) {
+            settings.muted = false;
+            document.querySelectorAll("[data-plyr]").forEach((ele) => {
+              if (ele.getAttribute("data-plyr") == "mute") {
+                settings.volume = 1;
+                ele.click();
+              }
+            });
+            videoSoundOverlay ? videoSoundOverlay.remove() : "",
+              setTimeout(() => {
+                settings.volume = 1;
+                if (p.autoplay) {
+                  p.play();
+                  p.restart();
+                }
+              }, 100);
+          }
+        }
+      }
     });
 
     p.on("timeupdate", (e) => {
@@ -618,6 +630,15 @@ align-items: center;
       resumeVideo(e, player, ".cta-modal");
     });
   });
+}
+
+function getOnlinePlayer(link) {
+  if (link.includes("vimeo")) {
+    return "vimeo";
+  } else if (link.includes("youtube")) {
+    return "youtube";
+  }
+  return null;
 }
 
 function renderPasswordModal(
