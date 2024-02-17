@@ -28,7 +28,6 @@ body {
   margin-right: 10px;
 }
 
-
 .d-grid {
   height: 100vh;
   display: -ms-grid;
@@ -252,6 +251,29 @@ iframe {
 
 .color-picker-panel:hover {
   visibility: visible;
+}
+
+.color-picker input[type="color"] {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+  background: none;
+  overflow: hidden;
+  border: 1px dashed gray;
+  box-shadow: 2px 2px 8px 0px black;
+}
+
+input[type="color"]::-moz-color-swatch {
+  border: none;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: none;
 }
 
 .panel-row {

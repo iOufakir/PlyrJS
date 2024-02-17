@@ -24,11 +24,11 @@ const Player = {
   run: () => {
     (async () => {
       await load_scripts([
-        "https://cdn.plyr.io/3.7.3/plyr.js",
+        "https://cdn.plyr.io/3.7.8/plyr.js",
         "https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js",
       ]);
 
-      ["https://cdn.plyr.io/3.7.3/plyr.css"].forEach((e) => {
+      ["https://cdn.plyr.io/3.7.8/plyr.css"].forEach((e) => {
         const t = document.createElement("link");
 
         (t.href = e), (t.rel = "stylesheet"), document.head.appendChild(t);
@@ -40,16 +40,16 @@ const Player = {
 
 function init() {
   document.querySelectorAll(".plyr__video-embed").forEach(function (player) {
-    var e = player.getAttribute("video-details");
-    if (e && player) {
-      const t = JSON.parse(window.atob(e.split("=")[1]));
+    var videoDetailsEncoded = player.getAttribute("video-details");
+    if (videoDetailsEncoded && player) {
+      const t = JSON.parse(window.atob(videoDetailsEncoded.split("=")[1]));
       const playerName = getOnlinePlayer(t.link);
 
       if (playerName) {
         player.style.display = "none";
       }
 
-      var css = `.plyr__menu__container .plyr__control>span{color:#000 !important}
+      var css = `.plyr__menu__container .plyr__control>span{color:#000000 !important}
        
         `;
       var style = document.createElement("style");
@@ -65,11 +65,9 @@ function init() {
      <source src="${t.link}" type="video/mp4" />
     </video>`
         : `<iframe loading="lazy" 
-    src="${
-      t.link
-    }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&background=1&autoplay=${
-            t.autoplay ? 1 : 0
-          }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
+    src="${t.link
+        }?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;title=false&amp;enablejsapi=1&mute=1&background=1&autoplay=${t.autoplay ? 1 : 0
+        }" allowfullscreen allowtransparency allowautoplay allow="autoplay; fullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;"></iframe>`;
 
       player.insertAdjacentHTML("afterbegin", html);
 
@@ -80,23 +78,25 @@ function init() {
 
       void 0 !== t.poster && (o.poster = t.poster),
         o.once("pause", (e) => {
-          const videoSoundOverlay = player.querySelector(
-            ".video-sound-overlay"
-          );
-          void 0 !== t.muted &&
-            1 == t.muted &&
-            ((t.muted = !1),
-            player.querySelectorAll("[data-plyr]").forEach((e) => {
-              "mute" == e.getAttribute("data-plyr") && e.click();
-            }),
-            videoSoundOverlay ? videoSoundOverlay.remove() : "",
-            setTimeout(() => {
-              o.volume = 1;
+          if (document.visibilityState === 'visible') {
+            const videoSoundOverlay = player.querySelector(
+              ".video-sound-overlay"
+            );
+            void 0 !== t.muted &&
+              1 == t.muted &&
+              ((t.muted = !1),
+                player.querySelectorAll("[data-plyr]").forEach((e) => {
+                  "mute" == e.getAttribute("data-plyr") && e.getAttribute("aria-pressed") === false && e.click();
+                }),
+                videoSoundOverlay ? videoSoundOverlay.remove() : "",
+                setTimeout(() => {
+                  o.volume = 1;
 
-              if (o.autoplay) {
-                o.play(), o.restart();
-              }
-            }, 100));
+                  if (o.autoplay) {
+                    o.play(), o.restart();
+                  }
+                }, 100));
+          }
         }),
         o.on("timeupdate", (e) => {
           if (o.playing) {
@@ -138,7 +138,7 @@ function init() {
             }
           }
         }),
-        o.on("ready", (e) => {
+        o.on("ready", (event) => {
           if (!o.isVimeo && t.autoplay) {
             try {
               o.togglePlay();
@@ -148,18 +148,31 @@ function init() {
           }
 
           for (
-            var e = player.querySelectorAll(
-                ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
-              ),
-              i = 0;
-            i < e.length;
+            let plyrControlsElements = player.querySelectorAll(
+              ".plyr--full-ui input[type=range], .plyr__control--overlaid, .plyr__controls__item"
+            ),
+            i = 0;
+            i < plyrControlsElements.length;
             i++
           ) {
-            e[i].style.color = t.progressBarColor;
-            if (i === 0 || i === e.length - 1) {
-              e[i].style.backgroundColor = t.controlBarColor;
+            plyrControlsElements[i].style.color = t.controlElementsColor;
+            plyrControlsElements[i].querySelectorAll("button").forEach(element => {
+              element.style.color = t.controlElementsColor;
+            });
+
+            if (i === 0 || i === plyrControlsElements.length - 1) {
+              plyrControlsElements[i].style.backgroundColor = t.controlBackgroundColor;
             }
           }
+
+
+          // Display background color for the plyr.js control 
+          let plyrControls = player.querySelectorAll(".plyr--video .plyr__controls");
+          plyrControls.forEach(plyrControl => {
+            plyrControl.style.background = t.controlBackgroundColor;
+          });
+
+
 
           const r = player.querySelectorAll(
             ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
@@ -168,21 +181,22 @@ function init() {
           for (let e = 0; e < r.length; e++)
             r[e].style.setProperty(
               "--plyr-range-thumb-background",
-              t.controlBarColor
+              t.controlBackgroundColor
             );
 
           let divBlock = '<div class="video-sound-overlay">';
           (divBlock += '<div class="unmute-button">'),
             void 0 !== t.mutedImageUrl &&
-              t.mutedImageUrl &&
-              (divBlock += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
+            t.mutedImageUrl &&
+            (divBlock += `<img src="${t.mutedImageUrl}" style="width:30%" alt="Click To Turn On Sound">`),
             (divBlock += "</div>"),
             (divBlock += !t.playIcon
               ? `<button style="
                   opacity: 1;
                   visibility: visible;
                   z-index:0;
-                  background:${t.controlBarColor}" 
+                  background:${t.controlBackgroundColor};
+                  color:${t.controlElementsColor};"
                   type="button" class="play-icon-default plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`
               : ""),
             (divBlock += "<div>");
@@ -389,6 +403,11 @@ var styles = `
       height: 30px;
       width: 30px;
       }
+
+      
+    .plyr__control--overlaid, .plyr--video div.plyr__controls{
+      padding-top: 0.8rem;
+    }
 
       button.plyr__control.plyr__control--overlaid.plyr__control--pressed{
         visibility: visible;

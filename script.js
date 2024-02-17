@@ -58,6 +58,10 @@ function init() {
     height: 30px;
     width: 30px;
     }
+
+    .plyr__control--overlaid, .plyr--video div.plyr__controls{
+      padding-top: 0.8rem;
+    }
     `;
 
   const style = document.createElement("style");
@@ -224,8 +228,8 @@ function init() {
     }
 
     Player.showLoader();
-    const progressBarColor = document.getElementById("progress-bar-color");
-    const controlBarColor = document.getElementById("control-bar-color");
+    const controlElementsColor = document.getElementById("control-elements-color");
+    const controlBackgroundColor = document.getElementById("control-background-color");
     const height = document.getElementById("height");
     const width = document.getElementById("width");
     const ctaModal = document.querySelector(".cta-modal");
@@ -235,48 +239,28 @@ function init() {
 
     settings.link = link;
 
-    progressBarColor.addEventListener("input", (event) => {
-      var progressBar = document.querySelectorAll(
-        ".plyr--full-ui input[type=range], .plyr__control--overlaid"
-      );
-      for (var i = 0; i < progressBar.length; i++) {
-        progressBar[i].style.color = progressBarColor.value;
-      }
+    controlElementsColor.addEventListener("input", (event) => {
+      settings.controlElementsColor = controlElementsColor.value;
+      updateControlElementsColor(controlElementsColor);
     });
 
-    controlBarColor.addEventListener("input", () => {
-      const controls = document.querySelectorAll(
+    controlBackgroundColor.addEventListener("input", () => {
+      settings.controlBackgroundColor = controlBackgroundColor.value;
+      const plyrControl = document
+        .querySelector(".plyr__control--overlaid,.plyr--video .plyr__controls");
+      plyrControl.style.setProperty("--plyr-color-main", controlBackgroundColor.value);
+
+      const inputRange = document.querySelectorAll(
         ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
       );
-
-      document
-        .querySelector(".plyr__control--overlaid")
-        .style.setProperty("--plyr-color-main", controlBarColor.value);
-
-      for (let i = 0; i < controls.length; i++) {
-        controls[i].style.setProperty(
+      for (let i = 0; i < inputRange.length; i++) {
+        inputRange[i].style.setProperty(
           "--plyr-range-thumb-background",
-          controlBarColor.value
+          controlBackgroundColor.value
         );
       }
 
-      var css = `.plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]:before {background: var(--plyr-control-toggle-checked-background,var(--plyr-color-main,var(--plyr-color-main,${controlBarColor.value})))} .plyr--video .plyr__control:hover{ background-color: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main, ${controlBarColor.value}))) !important} 
-
-      button.plyr__control--overlaid{
-        background-color:  ${controlBarColor.value}; 
-      }
-      
-           `;
-      document.getElementById("hover_color")?.remove();
-      var style = document.createElement("style");
-      style.id = "hover_color";
-      if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-      } else {
-        style.appendChild(document.createTextNode(css));
-      }
-
-      document.head.appendChild(style);
+      updateControlBackgroundColor(controlBackgroundColor);
     });
 
     const playerName = getOnlinePlayer(link);
@@ -293,6 +277,8 @@ function init() {
     settings.autoplay = autoplay.checked;
 
     settings.muted = muted.checked;
+    settings.isControlBarHidden = controlBar.checked;
+
     if (!autoplay.checked) {
       settings.autoplay = muted.checked;
     }
@@ -313,23 +299,19 @@ function init() {
 
     settings.storage = { enabled: false };
 
-    const p = new Plyr("#player", settings);
+    const plyr = new Plyr("#player", settings);
 
-    if (p.isVimeo && settings.autoplay && settings.muted) {
+    if (plyr.isVimeo && settings.autoplay && settings.muted) {
       settings.volume = 0;
     }
 
     if (thumbnail.value) {
-      p.poster = thumbnail.value;
+      plyr.poster = thumbnail.value;
     }
 
-    p.on("ready", (event) => {
-      var progressBar = document.querySelectorAll(
-        ".plyr__control, .plyr--full-ui input[type=range], .plyr__control--overlaid"
-      );
-      for (var i = 0; i < progressBar.length; i++) {
-        progressBar[i].style.color = progressBarColor.value;
-      }
+    plyr.on("ready", (event) => {
+      updateControlElementsColor(controlElementsColor);
+      updateControlBackgroundColor(controlBackgroundColor);
 
       const controls = document.querySelectorAll(
         ".plyr--full-ui input[type=range], .plyr__volume input[type=range]"
@@ -338,12 +320,12 @@ function init() {
       for (let i = 0; i < controls.length; i++) {
         controls[i].style.setProperty(
           "--plyr-range-thumb-background",
-          controlBarColor.value
+          controlBackgroundColor.value
         );
       }
       settings.mutedImageUrl = mutedImageUrl;
-      settings.progressBarColor = progressBarColor.value;
-      settings.controlBarColor = controlBarColor.value;
+      settings.controlElementsColor = controlElementsColor.value;
+      settings.controlBackgroundColor = controlBackgroundColor.value;
       settings.ctaEnabled = ctaCheckbox.checked;
       if (settings.ctaEnabled) {
         settings.ctaInputUrl = ctaInputUrl.value;
@@ -368,7 +350,7 @@ function init() {
         settings.password = encodeURIComponent(inputPassword.value);
       }
 
-      const dynamicScript = `<div ${playerName ? "data-plyr-provider=\""+playerName + "\"": "" } class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
+      const dynamicScript = `<div ${playerName ? "data-plyr-provider=\"" + playerName + "\"" : ""} class="plyr__video-embed" playsinline autoplay muted loop video-details="s=${window.btoa(
         JSON.stringify(settings)
       )}"></div>
         \n<!-- ADD THE CODE BELOW ONLY ONCE IN YOUR WEBSITE. (IF YOU HAVE IT ALREADY, THEN DON'T INCLUDE IT!) !-->
@@ -441,18 +423,19 @@ function init() {
           const playBlock = `<button style="
           opacity: 1;
           visibility: visible;
-          z-index:0;" 
+          z-index: 0;
+          color: ${settings.controlElementsColor};"
           type="button" id="play-icon-default" class="plyr__control plyr__control--overlaid"><svg focusable="false"><use xlink:href="#plyr-play"></use></svg></button>`;
           videoSoundOverlay.insertAdjacentHTML("beforeend", playBlock);
         }
 
         videoSoundOverlay.addEventListener("click", () => {
           videoSoundOverlay.remove();
-          if (p.autoplay && p.muted) {
-            p.volume = 1;
-            p.autoplay = false;
-            p.play();
-            p.restart();
+          if (plyr.autoplay && plyr.muted) {
+            plyr.volume = 1;
+            plyr.autoplay = false;
+            plyr.play();
+            plyr.restart();
           }
         });
       }
@@ -460,37 +443,38 @@ function init() {
       Player.hideLoader();
     });
 
-    p.once("pause", (event) => {
+    plyr.once("pause", (event) => {
       if (playerName) {
         const videoSoundOverlay = player.querySelector(".video-sound-overlay");
-        if (typeof settings.muted != "undefined") {
-          if (settings.muted == true) {
+        if (document.visibilityState === 'visible' && typeof settings.muted !== undefined) {
+          if (settings.muted) {
             settings.muted = false;
             document.querySelectorAll("[data-plyr]").forEach((ele) => {
-              if (ele.getAttribute("data-plyr") == "mute") {
+              if (ele.getAttribute("data-plyr") === "mute" && ele.getAttribute("aria-pressed") === false) {
                 settings.volume = 1;
                 ele.click();
               }
             });
-            videoSoundOverlay ? videoSoundOverlay.remove() : "",
-              setTimeout(() => {
-                settings.volume = 1;
-                if (p.autoplay) {
-                  p.play();
-                  p.restart();
-                }
-              }, 100);
+
+            videoSoundOverlay ? videoSoundOverlay.remove() : "";
+            setTimeout(() => {
+              settings.volume = 1;
+              if (plyr.autoplay) {
+                plyr.play();
+                plyr.restart();
+              }
+            }, 100);
           }
         }
       }
     });
 
-    p.on("timeupdate", (e) => {
-      if (p.playing) {
+    plyr.on("timeupdate", (e) => {
+      if (plyr.playing) {
         if (
           ctaCheckbox.checked &&
           ctaTimeTarget.value &&
-          parseInt(p.currentTime) === parseInt(ctaTimeTarget.value)
+          parseInt(plyr.currentTime) === parseInt(ctaTimeTarget.value)
         ) {
           renderCtaModal(
             frame,
@@ -500,14 +484,14 @@ function init() {
             ctaInputUrl.value,
             ctaBtnBackgroundColor.value,
             ctaBtnTextColor.value,
-            p
+            plyr
           );
-          p.pause();
+          plyr.pause();
           ctaTimeTarget.value = null;
         } else if (
           passwordProtectCheckbox.checked &&
           passwordTimeTarget.value &&
-          parseInt(p.currentTime) === parseInt(passwordTimeTarget.value)
+          parseInt(plyr.currentTime) === parseInt(passwordTimeTarget.value)
         ) {
           renderPasswordModal(
             frame,
@@ -516,9 +500,9 @@ function init() {
             passwordInputTitle.value,
             passwordBtnBackgroundColor.value,
             passwordBtnTextColor.value,
-            p
+            plyr
           );
-          p.pause();
+          plyr.pause();
           passwordTimeTarget.value = null;
         }
       }
@@ -533,7 +517,7 @@ function init() {
         ctaInputUrl.value,
         ctaBtnBackgroundColor.value,
         ctaBtnTextColor.value,
-        p
+        plyr
       );
     } else if (passwordProtectCheckbox.checked && !passwordTimeTarget.value) {
       renderPasswordModal(
@@ -543,7 +527,7 @@ function init() {
         passwordInputTitle.value,
         passwordBtnBackgroundColor.value,
         passwordBtnTextColor.value,
-        p
+        plyr
       );
     }
   }
@@ -559,21 +543,24 @@ const Player = {
   run: () => {
     (async () => {
       await load_scripts([
-        "https://cdn.plyr.io/3.7.3/plyr.js",
+        "https://cdn.plyr.io/3.7.8/plyr.js",
         "https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js",
       ]);
 
-      const style = ["https://cdn.plyr.io/3.7.3/plyr.css"];
+      const style = ["https://cdn.plyr.io/3.7.8/plyr.css"];
       style.forEach((s) => {
         const _s = document.createElement("link");
         _s.href = s;
         _s.rel = "stylesheet";
         document.head.appendChild(_s);
       });
+
       init();
+
     })();
   },
 };
+
 
 function renderCtaModal(
   frame,
@@ -697,6 +684,44 @@ function renderPasswordModal(
 function resumeVideo(event, player, targetClass) {
   event.target.closest(targetClass).style.display = "none";
   player.play();
+}
+
+
+function updateControlElementsColor(controlElementsColor) {
+  const plyrControls = document.querySelectorAll(
+    ".plyr--full-ui input[type=range], .plyr__control--overlaid,.plyr--video .plyr__controls"
+  );
+  for (let i = 0; i < plyrControls.length; i++) {
+    plyrControls[i].style.color = controlElementsColor.value;
+
+    plyrControls[i].querySelectorAll("button").forEach(element => {
+      element.style.color = controlElementsColor.value;
+    });
+  }
+}
+
+
+function updateControlBackgroundColor(controlBackgroundColor) {
+  var css = `.plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]:before {background: var(--plyr-control-toggle-checked-background,var(--plyr-color-main,var(--plyr-color-main,${controlBackgroundColor.value})))} .plyr--video .plyr__control:hover{ background-color: var(--plyr-video-control-background-hover,var(--plyr-color-main,var(--plyr-color-main, ${controlBackgroundColor.value}))) !important} 
+
+  button.plyr__control--overlaid {
+    background-color:  ${controlBackgroundColor.value}; 
+  }
+    .plyr--video .plyr__controls {
+    background: ${controlBackgroundColor.value}; 
+  }
+           `;
+
+  document.getElementById("hover_color")?.remove();
+  let style = document.createElement("style");
+  style.id = "hover_color";
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+
+  document.head.appendChild(style);
 }
 
 async function load_scripts(script_urls) {
