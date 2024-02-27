@@ -71,13 +71,13 @@ function init() {
 
       player.insertAdjacentHTML("afterbegin", html);
 
-      const o = new Plyr(
+      const plyr = new Plyr(
         playerName ? player : player.querySelector("video"),
         t
       );
 
-      void 0 !== t.poster && (o.poster = t.poster),
-        o.once("pause", (e) => {
+      void 0 !== t.poster && (plyr.poster = t.poster),
+        plyr.once("pause", (e) => {
           if (document.visibilityState === 'visible') {
             const videoSoundOverlay = player.querySelector(
               ".video-sound-overlay"
@@ -90,20 +90,23 @@ function init() {
                 }),
                 videoSoundOverlay ? videoSoundOverlay.remove() : "",
                 setTimeout(() => {
-                  o.volume = 1;
+                  plyr.volume = 1;
 
-                  if (o.autoplay) {
-                    o.play(), o.restart();
+                  if (plyr.autoplay) {
+                    plyr.play(), plyr.restart();
                   }
                 }, 100));
           }
         }),
-        o.on("timeupdate", (e) => {
-          if (o.playing) {
+        plyr.on("timeupdate", (e) => {
+          if (plyr.muted) {
+            return;
+          }
+          if (plyr.playing) {
             if (
               t.ctaEnabled &&
               t.ctaTimeTarget &&
-              parseInt(o.currentTime) === t.ctaTimeTarget
+              parseInt(plyr.currentTime) === t.ctaTimeTarget
             ) {
               renderCtaModal(
                 player,
@@ -113,15 +116,15 @@ function init() {
                 t.ctaInputUrl,
                 t.ctaBtnBackgroundColor,
                 t.ctaBtnTextColor,
-                o
+                plyr
               );
 
-              o.pause();
+              plyr.pause();
               t.ctaTimeTarget = null;
             } else if (
               t.passwordEnabled &&
               t.passwordTimeTarget &&
-              parseInt(o.currentTime) === t.passwordTimeTarget
+              parseInt(plyr.currentTime) === t.passwordTimeTarget
             ) {
               renderPasswordModal(
                 player,
@@ -131,17 +134,17 @@ function init() {
                 t.passwordBtnBackgroundColor,
                 t.passwordBtnTextColor,
                 t.password,
-                o
+                plyr
               );
-              o.pause();
+              plyr.pause();
               t.passwordTimeTarget = null;
             }
           }
         }),
-        o.on("ready", (event) => {
-          if (!o.isVimeo && t.autoplay) {
+        plyr.on("ready", (event) => {
+          if (!plyr.isVimeo && t.autoplay) {
             try {
-              o.togglePlay();
+              plyr.togglePlay();
             } catch (error) {
               console.error(error);
             }
@@ -216,12 +219,12 @@ function init() {
 
           videoSoundOverlay.addEventListener("click", () => {
             videoSoundOverlay.remove();
-            if (o.autoplay && o.muted) {
-              o.volume = 1;
-              o.autoplay = false;
-              o.restart();
-            } else if (!o.playing) {
-              o.play();
+            if (plyr.autoplay && plyr.muted) {
+              plyr.volume = 1;
+              plyr.autoplay = false;
+              plyr.restart();
+            } else if (!plyr.playing) {
+              plyr.play();
             }
           });
 

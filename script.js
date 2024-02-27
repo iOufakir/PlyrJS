@@ -1,4 +1,7 @@
 let displayCode = false;
+let isCTAReady = false;
+let isCtaAlreadyDisplayed = false;
+let isPasswordReady = false;
 const loader = document.getElementById("loader");
 let mutedImageUrl = "";
 const settings = {};
@@ -104,6 +107,7 @@ function init() {
       ctaInputUrl.value = "";
       ctaTimeTarget.value = "";
       ctaHeadline.value = "";
+      isCTAReady = false;
 
       ctaInputTitle.closest("li").style.display = "none";
       ctaInputUrl.closest("li").style.display = "none";
@@ -113,6 +117,7 @@ function init() {
       ctaBtnBackgroundColor.closest("li").style.display = "none";
       ctaBtnTextColor.closest("li").style.display = "none";
     }
+    checkCtaReady();
     createNewIframe();
   });
 
@@ -130,6 +135,7 @@ function init() {
       passwordTimeTarget.value = "";
       passwordHeadline.value = "";
       inputPassword.value = "";
+      isPasswordReady = false;
 
       passwordInputTitle.closest("li").style.display = "none";
       passwordTimeTarget.closest("li").style.display = "none";
@@ -139,6 +145,7 @@ function init() {
       passwordBtnTextColor.closest("li").style.display = "none";
       inputPassword.closest("li").style.display = "none";
     }
+    checkPasswordReady();
     createNewIframe();
   });
 
@@ -165,8 +172,12 @@ function init() {
   });
 
   ctaTimeTarget.addEventListener("input", (e) => {
-    let modal = document.querySelector(".cta-modal");
-    modal?.remove();
+    checkCtaReady();
+    if (ctaCheckbox.checked && ctaTimeTarget.value > 0) {
+      let modal = document.querySelector(".cta-modal");
+      modal?.remove();
+    }
+    createNewIframe();
   });
 
   passwordInputTitle.addEventListener("input", (e) => {
@@ -188,8 +199,11 @@ function init() {
   });
 
   passwordTimeTarget.addEventListener("input", (e) => {
-    modal = document.querySelector(".password-protect-modal");
-    modal?.remove();
+    checkPasswordReady();
+    if (passwordProtectCheckbox.checked && passwordTimeTarget.value > 0) {
+      modal = document.querySelector(".password-protect-modal");
+      modal?.remove();
+    }
   });
 
   muted.addEventListener("change", (event) => {
@@ -219,6 +233,19 @@ function init() {
     displayCode = true;
     createNewIframe();
   });
+
+  function checkCtaReady() {
+    if (ctaCheckbox.checked && ctaTimeTarget.value > 0) {
+      isCTAReady = true;
+    }
+  }
+
+  function checkPasswordReady() {
+    if (passwordProtectCheckbox.checked && passwordTimeTarget.value > 0) {
+      isPasswordReady = true;
+    }
+  }
+
 
   function createNewIframe() {
     let link = document.getElementById("videoLink").value;
@@ -310,6 +337,7 @@ function init() {
     }
 
     plyr.on("ready", (event) => {
+      isCtaAlreadyDisplayed = false;
       updateControlElementsColor(controlElementsColor);
       updateControlBackgroundColor(controlBackgroundColor);
 
@@ -432,6 +460,7 @@ function init() {
         videoSoundOverlay.addEventListener("click", () => {
           videoSoundOverlay.remove();
           if (plyr.autoplay && plyr.muted) {
+            settings.muted = false;
             plyr.volume = 1;
             plyr.autoplay = false;
             plyr.play();
@@ -470,10 +499,13 @@ function init() {
     });
 
     plyr.on("timeupdate", (e) => {
+      if (settings.muted) {
+        return;
+      }
       if (plyr.playing) {
         if (
-          ctaCheckbox.checked &&
-          ctaTimeTarget.value &&
+          !isCtaAlreadyDisplayed &&
+          isCTAReady &&
           parseInt(plyr.currentTime) === parseInt(ctaTimeTarget.value)
         ) {
           renderCtaModal(
@@ -486,11 +518,10 @@ function init() {
             ctaBtnTextColor.value,
             plyr
           );
+          isCtaAlreadyDisplayed = true;
           plyr.pause();
-          ctaTimeTarget.value = null;
         } else if (
-          passwordProtectCheckbox.checked &&
-          passwordTimeTarget.value &&
+          isPasswordReady &&
           parseInt(plyr.currentTime) === parseInt(passwordTimeTarget.value)
         ) {
           renderPasswordModal(
@@ -502,12 +533,16 @@ function init() {
             passwordBtnTextColor.value,
             plyr
           );
+          isPasswordReady = false;
           plyr.pause();
-          passwordTimeTarget.value = null;
         }
       }
     });
 
+    displayCTAOrPassword(plyr);
+  }
+
+  function displayCTAOrPassword(plyr) {
     if (ctaCheckbox.checked && !ctaTimeTarget.value) {
       renderCtaModal(
         frame,
